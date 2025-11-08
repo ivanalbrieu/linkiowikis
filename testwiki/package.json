@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "array-flatten": "^3.0.0",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "bootstrap-icons": "^1.11.3",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "diff": "^5.2.0",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-paginate": "^1.0.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.0.1",
+    "ffmpeg": "^0.0.4",
+    "jsonwebtoken": "^9.0.2",
+    "markdown": "^0.5.0",
+    "markdown-it": "^14.0.0",
+    "marked": "^12.0.0",
+    "moment": "^2.30.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.9.1",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.13",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "sequelize": "^6.37.0",
+    "wikiapi": "^1.20.0",
+    "wiky": "^0.95.1"
+  }
+}
