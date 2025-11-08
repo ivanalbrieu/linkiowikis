@@ -68,25 +68,25 @@ Designing Linkiowikis with a focus on performance and adopting programming princ
 
 Enhancements or additional features:
 
-    User Permissions and Roles: Implementing a system to manage user roles (e.g., admin, editor, viewer) and permissions can provide finer control over who can edit, delete, or move pages.
+*User Permissions and Roles: Implementing a system to manage user roles (e.g., admin, editor, viewer) and permissions can provide finer control over who can edit, delete, or move pages.
 
-    Page Discussion or Comments: Adding a discussion or comments section on each page can facilitate community engagement and feedback.
+*Page Discussion or Comments: Adding a discussion or comments section on each page can facilitate community engagement and feedback.
 
-    Search Functionality: Implementing a search feature to help users find pages or content more efficiently.
+*Search Functionality: Implementing a search feature to help users find pages or content more efficiently.
 
-    Content Tagging and Categorization: Enhancing the categorization system to include tagging can improve the organization and discoverability of content.
+*Content Tagging and Categorization: Enhancing the categorization system to include tagging can improve the organization and discoverability of content.
 
-    Content Versioning and Rollback: While you have a history and revisions feature, ensuring that users can easily revert to a previous version can be valuable.
+*Content Versioning and Rollback: While you have a history and revisions feature, ensuring that users can easily revert to a previous version can be valuable.
 
-    Content Templates: Providing templates for common page types or content formats can streamline content creation.
+*Content Templates: Providing templates for common page types or content formats can streamline content creation.
 
-    Internationalization and Localization: If your user base is international, supporting multiple languages can enhance accessibility.
+*Internationalization and Localization: If your user base is international, supporting multiple languages can enhance accessibility.
 
-    Accessibility Enhancements: Ensuring your wiki is accessible to users with disabilities by following web accessibility guidelines.
+*Accessibility Enhancements: Ensuring your wiki is accessible to users with disabilities by following web accessibility guidelines.
 
-    API for External Integration: Creating an API for your wiki can allow external applications to interact with your content programmatically.
+*API for External Integration: Creating an API for your wiki can allow external applications to interact with your content programmatically.
 
-    Mobile Optimization: Ensuring that your wiki is fully responsive and mobile-friendly can improve the user experience on mobile devices.
+*Mobile Optimization: Ensuring that your wiki is fully responsive and mobile-friendly can improve the user experience on mobile devices.
 
-    Security Enhancements: Continuously reviewing and enhancing the security of your application, including protection against common web vulnerabilities.
+*Security Enhancements: Continuously reviewing and enhancing the security of your application, including protection against common web vulnerabilities.
 
