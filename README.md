@@ -2,8 +2,6 @@ Bootstrap, FontAwesome and NodeJS are required for this wiki engine to run.
 
 TEST WIKI 4 (actually NeoWiki dev version Alpha 2) ROADMAP!!!
 
-Splitting the pages router into different routes is a great step towards modularizing your application, which aligns well with the principles of simplicity and efficiency. As you continue to develop Linkiowikis, consider how each new feature can be integrated into this modular structure. Here are some suggestions on how to approach the implementation of the features you've listed, considering the modular design:
-
 
 1. Restore Deleted Pages or Select Revisions of a Deleted Page
 
@@ -68,12 +66,7 @@ Designing Linkiowikis with a focus on performance and adopting programming princ
     Encourage Contributions: Just as Slackware benefits from its community, design your system in a way that encourages contributions from others, whether through plugins, templates, or direct code contributions.
     Feedback Loops: Establish channels for user feedback and contributions, integrating valuable insights into the development process.
 
-By adhering to these principles, you can build Linkiowikis to be a robust, efficient, and user-friendly wiki platform that resonates with the simplicity and effectiveness of Slackware's approach to Linux distribution.
-
-
-That's excellent progress! It sounds like you've covered a significant portion of the core functionalities for a wiki or content management system. These features are crucial for managing content dynamically and ensuring that users can collaborate effectively while maintaining the integrity and history of the content.
-
-If you're looking for next steps or areas to expand upon, consider the following enhancements or additional features:
+Enhancements or additional features:
 
     User Permissions and Roles: Implementing a system to manage user roles (e.g., admin, editor, viewer) and permissions can provide finer control over who can edit, delete, or move pages.
 
@@ -97,4 +90,3 @@ If you're looking for next steps or areas to expand upon, consider the following
 
     Security Enhancements: Continuously reviewing and enhancing the security of your application, including protection against common web vulnerabilities.
 
-Remember, it's essential to prioritize based on your project's goals and your users' needs. If you have specific areas you're interested in exploring or need advice on, feel free to ask!
