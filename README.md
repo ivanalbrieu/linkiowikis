@@ -1,4 +1,4 @@
-Bootstrap, FontAwesome and NodeJS are required for this wiki engine to run.
+Bootstrap, FontAwesome, NodeJS and an XAMPP Server and Database are required for this wiki engine to run.
 
 TEST WIKI 4 (actually NeoWiki dev version Alpha 2) ROADMAP!!!
 
