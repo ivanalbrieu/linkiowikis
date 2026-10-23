@@ -1,25 +1,24 @@
-<div class="container mt-4">
-    <ul class="list-group">
-        <li class="list-group-item">
-            <div class="d-flex align-items-center justify-content-start category-bar">
-                <span class="category-label">Categories</span>
-                <div class="category-links">
-                    <span class="category-label">:</span>
-                    <% if (categories && categories.length) { %> <!-- Use 'categories' instead of 'page.Categories' -->
-                        <% categories.forEach((category) => { %>
-                            <a href="/wiki/category/<%= category.name.replace(/_/g, ' ') %>" class="category-link" title="Category: <%= category.name.replace(/_/g, ' ') %>"><%= category.name.replace(/_/g, ' ') %></a>
-                        <% }); %>
+<div class="mt-6 border border-gray-200 rounded p-2.5 bg-white text-sm">
+    <div class="flex items-center gap-2 flex-wrap">
+        <span class="font-medium text-gray-800">Categories</span>
+        <span class="text-gray-500">:</span>
+        <div class="category-links flex items-center gap-2">
+            <% if (categories && categories.length) { %>
+                <% categories.forEach((category, index) => { %>
+                    <a href="/wiki/category/<%= category.name.replace(/_/g, ' ') %>" class="text-blue-600 hover:underline" title="Category: <%= category.name.replace(/_/g, ' ') %>"><%= category.name.replace(/_/g, ' ') %></a>
+                    <% if (index < categories.length - 1) { %>
+                        <span class="text-gray-400">|</span>
                     <% } %>
-                </div>      
-                <div id="categoryTagsContainer" style="display: none;"></div>
-                <div id="categoryInputContainer" style="display: none;">
-                    <input type="text" id="newCategoryName" placeholder="Add category...">
-                    <div id="categorySuggestions"></div>
-                </div>                                                
-                <% if (typeof showAddCategoryButton !== 'undefined' && showAddCategoryButton) { %> <!-- Check 'showAddCategoryButton' explicitly -->
-                    <button class="btn btn-primary btn-flat btn-sm ml-2" type="button" id="CategorySelectAdd">Add category</button>
-                <% } %>
-            </div>
-        </li>
-    </ul>
+                <% }); %>
+            <% } %>
+        </div>      
+        <div id="categoryTagsContainer" style="display: none;"></div>
+        <div id="categoryInputContainer" style="display: none;" class="items-center gap-2">
+            <input type="text" id="newCategoryName" placeholder="Add category..." class="border border-gray-300 rounded px-2 py-1 text-sm outline-none focus:border-blue-500">
+            <div id="categorySuggestions"></div>
+        </div>                                                
+        <% if (typeof showAddCategoryButton !== 'undefined' && showAddCategoryButton) { %>
+            <button class="btn btn-primary btn-flat text-xs px-2 py-1 ml-2" type="button" id="CategorySelectAdd">Add category</button>
+        <% } %>
+    </div>
 </div>

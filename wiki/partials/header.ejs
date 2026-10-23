@@ -1,40 +1,36 @@
-<div class="row align-items-center" style="padding-right: 15px;"> <!-- Added padding to the right -->
-    <div class="col-md-2 col-sm-4">
-        <a href="/wiki/">
-            <img src="/img/wikilogo.png" class="img-fluid p-4" alt="Wiki Logo">
+<div class="flex items-center justify-between p-4 w-full bg-[#748a88]">
+    <!-- Left side: Logo & Wiki Title / Subnav -->
+    <div class="flex items-center gap-4">
+        <a href="/wiki/" class="flex-shrink-0 block">
+            <img src="/img/wikilogo.png" class="w-24 md:w-28 h-auto object-contain block" alt="Wiki Logo">
         </a>
-    </div>
-    <div class="col-md-4">
-        <a href="/wiki/" style="text-decoration: none; color: inherit;">
-            <h1><%= siteConfig.wikiName %></h1>
-        </a>
-        <!-- Editable navigation menu with basic styles -->
-        <nav class="navbar-expand-lg navbar-light header-navbar">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/wiki/Main_Page">Main Page</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <div>
+            <a href="/wiki/" class="no-underline text-black hover:no-underline">
+                <h1 class="text-3xl font-medium text-black m-0 leading-tight"><%= siteConfig.wikiName %></h1>
+            </a>
+            <nav class="flex items-center gap-4 mt-1 text-sm">
+                <a class="text-blue-600 hover:underline" href="/wiki/Main_Page">Main Page</a>
+                <div class="relative dropdown">
+                    <a class="text-blue-600 hover:underline cursor-pointer dropdown-toggle" id="headerMoreMenu" role="button">
                         More
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <ul class="dropdown-menu" aria-labelledby="headerMoreMenu">
                         <li><a class="dropdown-item" href="/wiki/Help">Help</a></li>
                         <li><a class="dropdown-item" href="/wiki/About">About</a></li>
-                        <!-- More dropdown items -->
                     </ul>
-                </li>
-                <!-- More navigation items -->
-            </ul>
-        </nav>        
-    </div>    
-    <div class="col-md-6 d-flex justify-content-end align-items-center">
-        <div class="d-flex justify-content-end">
-            <div class="d-flex flex-column align-items-right p-2">
-                <span class="h4 mb-0"><%= pagesCount %></span>
-                <span>Pages</span>
-            </div>            
+                </div>
+            </nav>
         </div>
-        <button class="btn btn-primary btn-flat btn-md ml-2" type="button" data-bs-toggle="modal" data-bs-target="#addNewPageModal"><i class="fa-solid fa-file-circle-plus"></i> Add new page</button>
+    </div>
+
+    <!-- Right side: Page Counter & Add New Page Button -->
+    <div class="flex items-center gap-4">
+        <div class="text-right">
+            <span class="text-2xl font-bold leading-none block text-black"><%= pagesCount %></span>
+            <span class="text-xs text-gray-800">Pages</span>
+        </div>
+        <button class="btn btn-primary btn-flat text-sm px-3 py-1.5 flex items-center gap-2" type="button" data-bs-toggle="modal" data-bs-target="#addNewPageModal">
+            <i class="fa-solid fa-file-circle-plus"></i> Add new page
+        </button>
     </div>
 </div>

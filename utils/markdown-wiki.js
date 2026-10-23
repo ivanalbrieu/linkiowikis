@@ -30,10 +30,10 @@ async function processWikiLinks(input) {
     try {
       exists = await pageExists(titleForDb);
     } catch (err) {
-      // If DB is offline or table error, default gracefully
+      // Graceful fallback if database check fails
     }
 
-    const linkColor = exists ? 'blue' : 'red';
+    const linkColor = exists ? '#0d6efd' : '#dc3545';
     const linkTitle = exists ? displayText : `${displayText} (page does not exist)`;
     const replacement = `<a href="/wiki/${encodeURIComponent(normalizedPageName)}" style="color:${linkColor};" title="${linkTitle}">${displayText}</a>`;
 
@@ -43,51 +43,6 @@ async function processWikiLinks(input) {
   return result;
 }
 
-function processHeaders(input) {
-  return input.replace(/^(={2,6})\s*(.*?)\s*\1$/gm, (match, equals, headerText) => {
-    let level = equals.length;
-    level = Math.max(1, level + 1);
-    return `${"#".repeat(level)} ${headerText.trim()}`;
-  });
-}
-
-function processLists(input) {
-  input = input.split('\n').map(line => {
-    const match = line.match(/^(·+)\s+(.*)/);
-    if (match) {
-      const depth = match[1].length;
-      const itemText = match[2];
-      return `${'  '.repeat(depth - 1)}* ${itemText}`;
-    }
-    return line;
-  }).join('\n');
-
-  const lines = input.split('\n');
-  const outputLines = [];
-
-  for (const line of lines) {
-    const match = line.match(/^((?:\d+\.)+)\s+(.*)/);
-    if (match) {
-      const marker = match[1];
-      const itemText = match[2];
-      const depth = marker.split('.').length - 2;
-      const markdownLine = `${'    '.repeat(depth)}1. ${itemText}`;
-      outputLines.push(markdownLine);
-    } else {
-      outputLines.push(line);
-    }
-  }
-
-  return outputLines.join('\n');
-}
-
-function processIndentation(input) {
-  return input.replace(/^(:+)(.*)/gm, (match, colons, text) => {
-    const indentWidth = colons.length * 20;
-    return `<div style="margin-left: ${indentWidth}px;">${text}</div>`;
-  });
-}
-
 /**
  * Pre-processes wikitext constructs into standard Markdown,
  * preserving support for existing pages while allowing modern Markdown.
@@ -95,20 +50,40 @@ function processIndentation(input) {
 async function wiki2markdown(input) {
   if (!input || typeof input !== 'string') return '';
 
-  // Process external URLs with display text: [http://url display text] -> [display text <i class="...">](url)
-  input = input.replace(/\[(http[s]?:\/\/[^\s]+)\s([^\]]+)\]/g, (match, url, linkText) => {
+  // 1. Process external URLs with display text: [http://url display text] -> [display text <i class="...">](url)
+  input = input.replace(/\[(https?:\/\/[^\s\]]+)\s+([^\]]+)\]/g, (match, url, linkText) => {
     const iconHtml = '<i class="fas fa-external-link-alt fa-xs"></i>';
-    return `[${linkText} ${iconHtml}](${url})`;
+    return `[${linkText.trim()} ${iconHtml}](${url.trim()})`;
   });
 
-  // Handle wikitext bold and italic ('''bold''' -> **bold**, ''italic'' -> *italic*)
+  // 2. Handle wikitext bold and italic ('''bold''' -> **bold**, ''italic'' -> *italic*)
   input = input.replace(/'''(.*?)'''/g, '**$1**')
                .replace(/''(.*?)''/g, '*$1*');
 
-  input = processHeaders(input);
+  // 3. Headers: ==Title== or ===Title=== or --Title-- or ---Title--- (handles \r\n properly)
+  input = input.replace(/^(=+|-{2,})\s*(.*?)\s*(=+|-{2,})\r?$/gm, (match, left, headerText) => {
+    let level = Math.min(5, Math.max(2, left.length));
+    return `${"#".repeat(level)} ${headerText.trim()}`;
+  });
+
+  // 4. Internal wiki links: [[Page Name]] or [[Page Name|Display Text]]
   input = await processWikiLinks(input);
-  input = processLists(input);
-  input = processIndentation(input);
+
+  // 5. Bullet lists: lines starting with ·, •, *, or -
+  input = input.split('\n').map(line => {
+    const trimmed = line.replace(/\r$/, '');
+    const m = trimmed.match(/^([·•\*\-]+)\s+(.*)/);
+    if (m && !trimmed.match(/^(\*{2,}|-{2,})/)) {
+      return `* ${m[2]}`;
+    }
+    return line;
+  }).join('\n');
+
+  // 6. Indentation with colons (:text -> margin-left)
+  input = input.replace(/^(:+)(.*)/gm, (match, colons, text) => {
+    const indentWidth = colons.length * 20;
+    return `<div style="margin-left: ${indentWidth}px;">${text}</div>`;
+  });
 
   return input;
 }

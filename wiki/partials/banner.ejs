@@ -1,38 +1,32 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-deep-purple fixed-top">
-    <div class="container-fluid">
-        <!-- Site name linking to the homepage -->
-        <a class="navbar-brand mr-4" href="/wiki/" title="<%= siteConfig.siteName %>">
-            <img src="/svgs/linkiowikis_logo.svg" alt="<%= siteConfig.siteName %>" style="height: 30px;"> <!-- Adjust the height as needed -->
-        </a>        
-        <!-- Responsive navbar toggler for smaller screens -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarToggle">
-            <div class="navbar-nav mr-auto">
-                <!-- Common links available to all users -->
-                <a class="nav-item nav-link" href="/wiki/">Home</a>
-                <a class="nav-item nav-link" href="/wiki/about">About</a>
-            </div>
-            <!-- Navbar Right Side -->
-            <div class="navbar-nav ms-auto">
-                <!-- Conditionally render links based on authentication status -->
-                <% if (isAuthenticated) { %>
-                    <img src="<%= currentUser.avatar %>" class="border-2 rounded-circle mt-1 navbar-avatar" alt="<%= currentUser.username %>" style="width: 35px; height: 35px;">   
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <%= currentUser.username %>
-                        </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="d-inline dropdown-item" href="/wiki/account">My Account</a>
-                                <a class="d-inline dropdown-item" href="/wiki/logout">Logout</a>
-                            </div>
-                    </div>
-                <% } else { %>                
-                    <a class="nav-item nav-link" href="/wiki/login">Login</a>
-                    <a class="nav-item nav-link" href="/wiki/register">Register</a>
-                <% } %>
-            </div>
+<nav class="fixed top-0 left-0 right-0 z-50 bg-[#250c21] min-h-[52px] px-4 flex items-center justify-between shadow-md">
+    <div class="flex items-center gap-6">
+        <!-- Site name linking to homepage -->
+        <a class="flex items-center no-underline" href="/wiki/" title="<%= siteConfig.siteName %>">
+            <img src="/svgs/linkiowikis_logo.svg" alt="<%= siteConfig.siteName %>" class="h-7 w-auto">
+        </a>
+        <!-- Main links -->
+        <div class="flex items-center gap-4">
+            <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/">Home</a>
+            <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/about">About</a>
         </div>
+    </div>
+
+    <!-- Right side: Authentication / User info -->
+    <div class="flex items-center gap-3">
+        <% if (isAuthenticated && currentUser) { %>
+            <div class="flex items-center gap-2 relative dropdown">
+                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border-2 border-white/40 object-cover" alt="<%= currentUser.username %>">
+                <a class="text-white/90 hover:text-white text-sm cursor-pointer dropdown-toggle no-underline flex items-center gap-1" id="navbarDropdownMenuLink" role="button">
+                    <%= currentUser.username %>
+                </a>
+                <ul class="dropdown-menu right-0" aria-labelledby="navbarDropdownMenuLink">
+                    <li><a class="dropdown-item" href="/wiki/account">My Account</a></li>
+                    <li><a class="dropdown-item text-danger" href="/wiki/logout">Logout</a></li>
+                </ul>
+            </div>
+        <% } else { %>
+            <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/login">Login</a>
+            <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/register">Register</a>
+        <% } %>
     </div>
 </nav>

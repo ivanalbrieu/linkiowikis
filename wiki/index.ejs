@@ -15,90 +15,79 @@
     <link href="/css/styles.css" rel="stylesheet">
     <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
 </head>
-<body class="d-flex h-100 bg-black">
-    <div class="container d-flex w-100 h-100 mx-auto flex-column">
-        <%- include('./partials/banner') %>
-        <main role="main" class="container">    
-            <div class="row d-flex justify-content-center mt-4">
-                <div class="col-md-10 main p-0">
-                    <%- include('./partials/addnewpage') %>
-                    <%- include('./partials/header') %>
-                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
-                        <!-- Page Editing Interface -->
-                        <% if (editMode) { %>
-                            <h2 class="mb-0"><%= title.replace(/_/g, ' ') %></h2>
-                            <!-- Editor form -->
-                            <form action="/wiki/<%= title.replace(/\s/g, '_') %>/save" method="POST">
-                                <div class="form-group">
-                                    <label for="textInput">Content (Markdown)</label>
-                                    <textarea id="textInput" class="form-control font-monospace" name="content" rows="20" placeholder="Enter Markdown content... Use [[Page Title]] for internal wiki links."><%= page ? page.content : '' %></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="categoriesInput">Categories</label>
-                                    <input type="text" id="categoriesInput" class="form-control" name="categories" autocomplete="off" placeholder="Enter categories separated by spaces. Use '_' for spaces within category titles." value="<%= categoriesString %>">
-                                </div>
-                                <!-- Within your editor form... -->
-                                <div class="form-group">
-                                    <label for="justificationInput">Justification</label>
-                                    <input type="text" id="justificationInput" class="form-control" name="justification" placeholder="Enter justification for your edit">
-                                </div>
-                                <button class="btn btn-primary" type="submit">Save Changes</button>
-                            </form>
-                        <% } else { %>
-                            <!-- Page Content Display -->
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h2 class="mb-0"><%= title.replace(/_/g, ' ') %></h2>
-                                <div>
-                                    <% if (pageExists) { %>
-                                        <!-- Dropdown Menu for Page Actions -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary btn-flat btn-sm dropdown-toggle" type="button" id="pageActionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-pencil"></i> Edit
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="pageActionsMenu">
-                                            <!-- Edit Page Link -->
-                                            <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/edit">Edit</a></li>
-                                            <!-- History Page Link -->
-                                            <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/history">History</a></li>
-                                            <!-- Move Page Link (Rename) -->
-                                            <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/move">Move</a></li>
-                                            <!-- Purge Page Link (Refresh Cache) -->
-                                            <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/purge">Purge</a></li>
-                                            <!-- Assuming this snippet is part of your page template where 'page.title' is available -->
-                                            <li><a href="/wiki/<%= encodeURIComponent(page.title.replace(/\s/g, '_')) %>/delete" class="dropdown-item text-danger">Delete</a></li>
-                                            </ul>
-                                        </div>  
-                                    <% } else { %>
-                                        <!-- Dropdown Menu for Page Actions -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary btn-flat btn-sm dropdown-toggle" type="button" id="pageActionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-plus"></i> Create
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="pageActionsMenu">
-                                            <!-- Edit Page Link -->
-                                            <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/edit">Edit</a></li>
-                                            </ul>
-                                        </div>
-                                    <% } %>
-								</div>								
-                            </div>
-                            <% if (page) { %>
-                                <p><%- page.content %></p>
-                                <% if (pageExists) { %>
-                                    <%- include('partials/categoryselect', { categories: page ? page.Categories : [], showAddCategoryButton: true }) %>
-                                <% } %>
+<body class="bg-black min-h-screen text-gray-900 font-sans m-0 p-0">
+    <%- include('./partials/banner') %>
+    <main class="w-full max-w-5xl mx-auto pt-20 pb-12 px-4">
+        <%- include('./partials/addnewpage') %>
+        <div class="bg-[#748a88] shadow-md">
+            <%- include('./partials/header') %>
+            <div class="bg-white min-h-[160px] p-6 shadow-sm">
+                <!-- Page Editing Interface -->
+                <% if (editMode) { %>
+                    <h2 class="text-2xl font-medium text-black m-0 mb-4"><%= title.replace(/_/g, ' ') %></h2>
+                    <!-- Editor form -->
+                    <form action="/wiki/<%= title.replace(/\s/g, '_') %>/save" method="POST">
+                        <div class="form-group">
+                            <label for="textInput" class="block font-medium mb-1">Content (Markdown)</label>
+                            <textarea id="textInput" class="form-control font-mono" name="content" rows="20" placeholder="Enter Markdown content... Use [[Page Title]] for internal wiki links."><%= page ? page.content : '' %></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoriesInput" class="block font-medium mb-1">Categories</label>
+                            <input type="text" id="categoriesInput" class="form-control" name="categories" autocomplete="off" placeholder="Enter categories separated by spaces. Use '_' for spaces within category titles." value="<%= categoriesString %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="justificationInput" class="block font-medium mb-1">Justification</label>
+                            <input type="text" id="justificationInput" class="form-control" name="justification" placeholder="Enter justification for your edit">
+                        </div>
+                        <button class="btn btn-primary btn-flat text-sm px-4 py-2" type="submit">Save Changes</button>
+                    </form>
+                <% } else { %>
+                    <!-- Page Content Display -->
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-2xl font-medium text-black m-0"><%= title.replace(/_/g, ' ') %></h2>
+                        <div>
+                            <% if (pageExists) { %>
+                                <!-- Dropdown Menu for Page Actions -->
+                                <div class="relative dropdown">
+                                    <button class="btn btn-primary btn-flat text-sm px-3 py-1 flex items-center gap-1.5 dropdown-toggle" type="button" id="pageActionsMenu">
+                                        <i class="fa-solid fa-pencil"></i> Edit
+                                    </button>
+                                    <ul class="dropdown-menu right-0" aria-labelledby="pageActionsMenu">
+                                        <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/edit">Edit</a></li>
+                                        <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/history">History</a></li>
+                                        <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/move">Move</a></li>
+                                        <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/purge">Purge</a></li>
+                                        <li><a href="/wiki/<%= encodeURIComponent(page.title.replace(/\s/g, '_')) %>/delete" class="dropdown-item text-danger">Delete</a></li>
+                                    </ul>
+                                </div>  
                             <% } else { %>
-                                <p>This page does not exist. You can create this page by clicking the "Create" button.</p>
+                                <!-- Dropdown Menu for Page Actions -->
+                                <div class="relative dropdown">
+                                    <button class="btn btn-primary btn-flat text-sm px-3 py-1 flex items-center gap-1.5 dropdown-toggle" type="button" id="pageActionsMenu">
+                                        <i class="fa-solid fa-plus"></i> Create
+                                    </button>
+                                    <ul class="dropdown-menu right-0" aria-labelledby="pageActionsMenu">
+                                        <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/edit">Edit</a></li>
+                                    </ul>
+                                </div>
                             <% } %>
-                        <% } %>
+                        </div>								
                     </div>
-                    <%- include('./partials/footer') %>
-                </div>
+                    <% if (page) { %>
+                        <div class="wiki-rendered-content text-gray-900 leading-relaxed">
+                            <%- page.content %>
+                        </div>
+                        <% if (pageExists) { %>
+                            <%- include('partials/categoryselect', { categories: page ? page.Categories : [], showAddCategoryButton: true }) %>
+                        <% } %>
+                    <% } else { %>
+                        <p class="text-gray-700">This page does not exist. You can create this page by clicking the "Create" button.</p>
+                    <% } %>
+                <% } %>
             </div>
-        </main>
-        <footer class="mt-auto text-white-50">
-        </footer>
-    </div>
+            <%- include('./partials/footer') %>
+        </div>
+    </main>
     <script src="/js/scripts.js"></script>
 </body>
-</html> 
+</html>
