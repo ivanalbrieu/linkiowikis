@@ -1,5 +1,99 @@
-console.log("Modal initialized");
-var myModal = new bootstrap.Modal(document.getElementById('addNewPageModal'), {});
+// Lightweight Vanilla UI Components (Replaces Bootstrap JS bundle)
+window.bootstrap = {
+  Modal: function(element) {
+    const el = typeof element === 'string' ? document.querySelector(element) : element;
+    return {
+      show: () => el && el.classList.add('show'),
+      hide: () => el && el.classList.remove('show'),
+      toggle: () => el && el.classList.toggle('show')
+    };
+  }
+};
+
+document.addEventListener('click', function(e) {
+  // Modal open trigger
+  const modalToggle = e.target.closest('[data-bs-toggle="modal"], [data-toggle="modal"]');
+  if (modalToggle) {
+    e.preventDefault();
+    const targetSelector = modalToggle.getAttribute('data-bs-target') || modalToggle.getAttribute('data-target') || modalToggle.getAttribute('href');
+    if (targetSelector) {
+      const modal = document.querySelector(targetSelector);
+      if (modal) modal.classList.add('show');
+    }
+    return;
+  }
+
+  // Modal close trigger
+  const modalDismiss = e.target.closest('[data-bs-dismiss="modal"], [data-dismiss="modal"]');
+  if (modalDismiss) {
+    e.preventDefault();
+    const modal = modalDismiss.closest('.modal');
+    if (modal) modal.classList.remove('show');
+    return;
+  }
+
+  // Click on modal backdrop outside modal-dialog
+  if (e.target.classList.contains('modal')) {
+    e.target.classList.remove('show');
+    return;
+  }
+
+  // Dropdown toggle trigger
+  const dropdownToggle = e.target.closest('[data-bs-toggle="dropdown"], [data-toggle="dropdown"], .dropdown-toggle');
+  if (dropdownToggle) {
+    e.preventDefault();
+    const parentDropdown = dropdownToggle.closest('.dropdown, .nav-item.dropdown');
+    if (parentDropdown) {
+      const menu = parentDropdown.querySelector('.dropdown-menu');
+      if (menu) {
+        const isOpen = menu.classList.contains('show');
+        document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+        if (!isOpen) {
+          menu.classList.add('show');
+        }
+      }
+    }
+    return;
+  }
+
+  // If clicked outside any dropdown, close all dropdowns
+  if (!e.target.closest('.dropdown, .nav-item.dropdown')) {
+    document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+  }
+
+  // Navbar collapse toggle trigger
+  const navbarToggler = e.target.closest('[data-bs-toggle="collapse"], .navbar-toggler');
+  if (navbarToggler) {
+    e.preventDefault();
+    const targetSelector = navbarToggler.getAttribute('data-bs-target') || '#navbarToggle';
+    const collapseEl = document.querySelector(targetSelector);
+    if (collapseEl) {
+      collapseEl.classList.toggle('show');
+    }
+    return;
+  }
+
+  // Alert dismiss trigger
+  const alertDismiss = e.target.closest('[data-bs-dismiss="alert"]');
+  if (alertDismiss) {
+    e.preventDefault();
+    const alertBox = alertDismiss.closest('.alert');
+    if (alertBox) {
+      alertBox.remove();
+    }
+    return;
+  }
+});
+
+// Close modal & dropdown on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal.show').forEach(m => m.classList.remove('show'));
+    document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+  }
+});
+
+var myModal = new window.bootstrap.Modal(document.getElementById('addNewPageModal'));
 
 let preparedCategories = []; // Global array to hold prepared categories for saving
 
