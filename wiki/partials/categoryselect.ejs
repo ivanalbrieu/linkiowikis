@@ -1,0 +1,25 @@
+<div class="container mt-4">
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div class="d-flex align-items-center justify-content-start category-bar">
+                <span class="category-label">Categories</span>
+                <div class="category-links">
+                    <span class="category-label">:</span>
+                    <% if (categories && categories.length) { %> <!-- Use 'categories' instead of 'page.Categories' -->
+                        <% categories.forEach((category) => { %>
+                            <a href="/wiki/category/<%= category.name.replace(/_/g, ' ') %>" class="category-link" title="Category: <%= category.name.replace(/_/g, ' ') %>"><%= category.name.replace(/_/g, ' ') %></a>
+                        <% }); %>
+                    <% } %>
+                </div>      
+                <div id="categoryTagsContainer" style="display: none;"></div>
+                <div id="categoryInputContainer" style="display: none;">
+                    <input type="text" id="newCategoryName" placeholder="Add category...">
+                    <div id="categorySuggestions"></div>
+                </div>                                                
+                <% if (typeof showAddCategoryButton !== 'undefined' && showAddCategoryButton) { %> <!-- Check 'showAddCategoryButton' explicitly -->
+                    <button class="btn btn-primary btn-flat btn-sm ml-2" type="button" id="CategorySelectAdd">Add category</button>
+                <% } %>
+            </div>
+        </li>
+    </ul>
+</div>

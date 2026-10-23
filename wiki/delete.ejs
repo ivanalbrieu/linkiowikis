@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete <%= title.replace(/_/g, ' ') %> | Test Wiki | linkiowikis</title>
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
+</head>
+<body class="d-flex h-100 bg-black">
+    <div class="container d-flex w-100 h-100 mx-auto flex-column">
+        <%- include('./partials/banner') %>
+        <main role="main" class="container">    
+            <div class="row d-flex justify-content-center mt-4">
+                <div class="col-md-10 main p-0">
+                    <%- include('./partials/addnewpage') %>
+                    <%- include('./partials/header') %>
+                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
+                        <h2 class="mb-0">Delete <%= title.replace(/_/g, ' ') %></h2>
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Warning: The page you are about to delete has a <a href="/wiki/<%= title %>/history" title="Page history">history with revisions</a>.</strong>
+                        </div>
+                        <form method="POST" action="/wiki/<%= encodeURIComponent(title) %>/delete">
+                            <label for="justification">Justification:</label>
+                            <input type="text" id="justification" name="justification">
+                            <button type="submit" class="btn btn-danger btn-flat btn-sm">Delete Page</button>
+                        </form>
+                    </div>
+                <%- include('./partials/footer') %>
+                </div>
+            </div>
+        </main>
+        <footer class="mt-auto text-white-50">
+        </footer>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/scripts.js"></script>
+</body>
+</html> 

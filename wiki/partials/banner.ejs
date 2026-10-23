@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-deep-purple fixed-top">
+    <div class="container-fluid">
+        <!-- Site name linking to the homepage -->
+        <a class="navbar-brand mr-4" href="/wiki/" title="<%= siteConfig.siteName %>">
+            <img src="/svgs/linkiowikis_logo.svg" alt="<%= siteConfig.siteName %>" style="height: 30px;"> <!-- Adjust the height as needed -->
+        </a>        
+        <!-- Responsive navbar toggler for smaller screens -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+                <!-- Common links available to all users -->
+                <a class="nav-item nav-link" href="/wiki/">Home</a>
+                <a class="nav-item nav-link" href="/wiki/about">About</a>
+            </div>
+            <!-- Navbar Right Side -->
+            <div class="navbar-nav ms-auto">
+                <!-- Conditionally render links based on authentication status -->
+                <% if (isAuthenticated) { %>
+                    <img src="<%= currentUser.avatar %>" class="border-2 rounded-circle mt-1 navbar-avatar" alt="<%= currentUser.username %>" style="width: 35px; height: 35px;">   
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <%= currentUser.username %>
+                        </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="d-inline dropdown-item" href="/wiki/account">My Account</a>
+                                <a class="d-inline dropdown-item" href="/wiki/logout">Logout</a>
+                            </div>
+                    </div>
+                <% } else { %>                
+                    <a class="nav-item nav-link" href="/wiki/login">Login</a>
+                    <a class="nav-item nav-link" href="/wiki/register">Register</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</nav>

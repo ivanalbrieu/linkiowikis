@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title.replace(/_/g, ' ') %>: Revision | Test Wiki | linkiowikis</title>
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
+</head>
+<body class="d-flex h-100 bg-black">
+    <div class="container d-flex w-100 h-100 mx-auto flex-column">
+        <%- include('./partials/banner') %>
+        <main role="main" class="container">
+            <div class="row d-flex justify-content-center mt-4">
+                <div class="col-md-10 main p-0">
+                    <%- include('./partials/addnewpage') %>
+                    <%- include('./partials/header') %>
+                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="mb-0"><%= newRevision ? 'Changes: ' : '' %><%= title.replace(/_/g, ' ') %></h2>
+                            <div>
+                                <div>
+                                  <% if (newRevision) { %>
+                                    <!-- Dropdown Menu for Page Actions -->
+                                    <div class="dropdown">
+                                      <button class="btn btn-primary btn-flat btn-sm dropdown-toggle" type="button" id="pageActionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-pencil"></i> Edit
+                                      </button>
+                                      <ul class="dropdown-menu" aria-labelledby="pageActionsMenu">
+                                        <!-- Edit Page Link -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/edit?oldid=<%= newRevision.revisionId %>">Edit</a></li>
+                                        <!-- History Page Link -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/history">History</a></li>
+                                        <!-- Purge Page Link (Refresh Cache) -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/purge?oldid=<%= oldRevision.revisionId %>&newid=<%= newRevision.revisionId %>">Purge</a></li>
+                                        <!-- Back to Page -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>"><i class="fas fa-arrow-left"></i> Back to Page</a></li>
+                                      </ul>
+                                    </div>
+                                  <% } else { %>
+                                    <div class="dropdown">
+                                      <button class="btn btn-primary btn-flat btn-sm dropdown-toggle" type="button" id="pageActionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa-solid fa-pencil"></i> Edit
+                                      </button>
+                                      <ul class="dropdown-menu" aria-labelledby="pageActionsMenu">
+                                        <!-- Edit Page Link -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/edit?oldid=<%= oldRevision.revisionId %>">Edit</a></li>
+                                        <!-- History Page Link -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/history">History</a></li>
+                                        <!-- Purge Page Link (Refresh Cache) -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/purge?oldid=<%= oldRevision.revisionId %>">Purge</a></li>
+                                        <!-- Back to Page -->
+                                        <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>"><i class="fas fa-arrow-left"></i> Back to Page</a></li>
+                                      </ul>
+                                    </div>
+                                  <% } %>                                  
+                              </div>
+                            </div>
+                        </div>
+                        <% if (newRevision) { %>
+                            <div class="row">
+                              <div class="col">
+                                <div class="alert alert-info" role="alert">
+                                  <a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff?oldid=<%= oldRevision.revisionId %>">
+                                    Viewing changes from <%= formatDate(oldRevision.editedAt) %> by <%= oldRevision.editedBy || 'Anonymous' %>
+                                  </a>
+                                </div>
+                                <% if (olderRevisionId) { %>
+                                    <div class="text-center">
+                                        <a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff?oldid=<%= olderRevisionId %>&newid=<%= oldRevision.revisionId %>" class="btn btn-primary btn-flat btn-sm">
+                                            <i class="fas fa-arrow-left"></i> Older revision
+                                          </a>
+                                    </div>
+                                <% } %>
+                                <% diffResult.forEach(function(part) { %>
+                                  <% if (part.removed) { %>
+                                    <div style="background-color: #f8d7da;"><%= part.value %></div>
+                                  <% } %>
+                                <% }); %>
+                              </div>
+                              <div class="col">
+                                <div class="alert alert-info" role="alert">
+                                    <a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff?oldid=<%= newRevision.revisionId %>">
+                                      Viewing changes up to <%= formatDate(newRevision.editedAt) %> by <%= newRevision.editedBy || 'Anonymous' %>
+                                    </a>
+                                </div>                              
+                                <% if (newerRevisionId) { %>
+                                    <div class="text-center">
+                                        <a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff?oldid=<%= newRevision ? newRevision.revisionId : oldRevision.revisionId %>&newid=<%= newerRevisionId %>" class="btn btn-primary btn-flat btn-sm">
+                                            Newer revision <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                <% } %>                                
+                                <% diffResult.forEach(function(part) { %>
+                                  <% if (part.added) { %>
+                                    <div style="background-color: #d4edda;"><%= part.value %></div>
+                                  <% } %>
+                                <% }); %>
+                              </div>
+                            </div>
+                            <h3>Latest revision as of <%= formatDate(newRevision.editedAt) %></h3>
+                            <p><%- newRevision.content %></p>
+                            <%- include('partials/categoryselect', { categories: pageCategories, showAddCategoryButton: false }) %>
+                          <% } else { %>
+                          <div class="alert alert-info" role="alert">
+                            Revision as of <%= formatDate(oldRevision.editedAt) %> by <%= oldRevision.editedBy || 'Anonymous' %>
+                          </div>
+                          <% if (olderRevisionId) { %>
+                            <a href="/wiki/<%= title %>/diff?oldid=<%= olderRevisionId %>" class="btn btn-primary btn-flat btn-sm"><i class="fas fa-arrow-left"></i> Older revision</a>
+                            <% } %>
+                            <% if (newerRevisionId) { %>
+                                <a href="/wiki/<%= title %>/diff?oldid=<%= newerRevisionId %>" class="btn btn-primary btn-flat btn-sm">Newer revision <i class="fas fa-arrow-right"></i></a>
+                            <% } %>                            
+                          <p><%- oldRevision.content %></p>
+                          <%- include('partials/categoryselect', { categories: pageCategories, showAddCategoryButton: false }) %>
+                        <% } %>
+                    </div>
+                    <%- include('./partials/footer') %>
+                </div>
+            </div>
+        </main>
+        <footer class="mt-auto text-white-50">
+        </footer>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/scripts.js"></script>
+</body>
+</html>

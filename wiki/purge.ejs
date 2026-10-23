@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title.replace(/_/g, ' ') %> | Test Wiki | linkiowikis</title>
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
+</head>
+<body class="d-flex h-100 bg-black">
+    <div class="container d-flex w-100 h-100 mx-auto flex-column">
+        <%- include('./partials/banner') %>
+        <main role="main" class="container">    
+            <div class="row d-flex justify-content-center mt-4">
+                <div class="col-md-10 main p-0">
+                    <%- include('./partials/addnewpage') %>
+                    <%- include('./partials/header') %>
+                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
+                        <h2 class="mb-0"><%= title.replace(/_/g, ' ') %></h2>
+                        <form action="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/purge<%= oldid ? '?oldid=' + oldid : '' %><%= newid ? '&newid=' + newid : '' %>" method="post">
+                            <p>Are you sure you want to purge the cache for this page?</p>
+                            <button type="submit" class="btn btn-primary btn-flat btn-sm">Purge Cache</button>
+                            <p>Purging a page clears the cache and forces the most current revision to appear on your browser memory.</p>
+                        </form>  
+                    </div>
+                <%- include('./partials/footer') %>
+                </div>
+            </div>
+        </main>
+        <footer class="mt-auto text-white-50">
+        </footer>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/scripts.js"></script>
+</body>
+</html>

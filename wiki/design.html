@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title | Test Wiki | linkiowikis</title>
+    <!-- Bootstrap CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
+</head>
+<body class="d-flex h-100 bg-black">
+    <div class="container d-flex w-100 h-100 mx-auto flex-column">
+        <!-- Inserted Banner Partial Content -->
+        <nav class="navbar navbar-expand-md navbar-dark bg-deep-purple fixed-top">
+            <div class="container-fluid">
+                <!-- Site name linking to the homepage -->
+                <a class="navbar-brand mr-4" href="/wiki/" title="linkiowikis">
+                    <img src="/svgs/linkiowikis_logo.svg" alt="linkiowikis" style="height: 30px;"> <!-- Adjust the height as needed -->
+                </a>        
+                <!-- Responsive navbar toggler for smaller screens -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        <!-- Common links available to all users -->
+                        <a class="nav-item nav-link" href="/wiki/">Home</a>
+                        <a class="nav-item nav-link" href="/wiki/about">About</a>
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav ms-auto">
+                        <!-- Conditionally render links based on authentication status -->
+                            <img src="<%= currentUser.avatar %>" class="border-2 rounded-circle mt-1 navbar-avatar" alt="<%= currentUser.username %>" style="width: 35px; height: 35px;">   
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    TestUser
+                                </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="d-inline dropdown-item" href="/wiki/account">My Account</a>
+                                        <a class="d-inline dropdown-item" href="/wiki/logout">Logout</a>
+                                    </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <main role="main" class="container">    
+            <div class="row d-flex justify-content-center mt-4">
+                <div class="col-md-10 main p-0">
+                    <!-- Header Placeholder (consider replacing with actual header partial content) -->
+                    <div class="row align-items-center" style="padding-right: 15px;"> <!-- Added padding to the right -->
+                        <div class="col-md-2 col-sm-4">
+                            <a href="/wiki/">
+                                <img src="/img/wikilogo.png" class="img-fluid p-4" alt="Wiki Logo">
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/wiki/" style="text-decoration: none; color: inherit;">
+                                <h1>Test Wiki</h1>
+                            </a>
+                            <!-- Editable navigation menu with basic styles -->
+                            <nav class="navbar-expand-lg navbar-light header-navbar">
+                                <ul class="navbar-nav mr-auto">
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="/wiki/Main_Page">Main Page</a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            More
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                            <li><a class="dropdown-item" href="/wiki/Help">Help</a></li>
+                                            <li><a class="dropdown-item" href="/wiki/About">About</a></li>
+                                            <!-- More dropdown items -->
+                                        </ul>
+                                    </li>
+                                    <!-- More navigation items -->
+                                </ul>
+                            </nav>        
+                        </div>    
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="d-flex justify-content-end">
+                                <div class="d-flex flex-column align-items-right p-2">
+                                    <span class="h4 mb-0">0</span>
+                                    <span>Pages</span>
+                                </div>            
+                            </div>
+                            <button class="btn btn-primary btn-flat btn-md ml-2" type="button" data-bs-toggle="modal" data-bs-target="#addNewPageModal"><i class="fa-solid fa-file-circle-plus"></i> Add new page</button>
+                        </div>
+                    </div>
+                    
+                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
+                        <!-- Page Content Display -->
+                        <div class="page-content-display">
+                            <h2 class="mb-0">Lorem ipsum dolor sit amet</h2>
+                            <p>
+
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tortor quam, ullamcorper accumsan quam et, lacinia condimentum velit. Nulla vulputate maximus neque sit amet fringilla. Pellentesque lobortis velit sem, iaculis porta ex laoreet ut. Sed ultricies mollis ante, et iaculis magna consectetur et. Sed viverra augue sit amet enim tempor, nec semper felis pretium. Nam commodo ornare mauris, eget lobortis nibh tristique at. Donec dapibus diam a sem suscipit, ac rhoncus lorem suscipit. Aenean varius risus velit, et luctus nibh sodales vel. Etiam id nisl in odio eleifend porta. Curabitur in faucibus nibh. Suspendisse a pretium nisi. Donec ultricies gravida metus sed posuere.
+                                
+                                Phasellus varius elit auctor consectetur elementum. Integer in sapien varius purus fermentum faucibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed tortor lorem, consectetur ut sem at, rhoncus rutrum sapien. Sed nulla metus, volutpat non placerat eget, volutpat vel eros. Nulla mattis in risus vitae commodo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi mollis tempus massa. Donec dignissim nibh vitae eleifend facilisis.
+                                
+                                Suspendisse vel risus in nulla dignissim feugiat. Vestibulum vel luctus felis, eu porta orci. Praesent scelerisque orci quis tristique blandit. Aenean eget mollis nulla. Nullam elit ipsum, pharetra ut aliquet vitae, dictum ac eros. In lacus tellus, dapibus sit amet vehicula nec, feugiat eu metus. Nulla laoreet sem id elementum maximus.
+                                
+                                Morbi erat lectus, dapibus non pellentesque in, sagittis sit amet massa. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vivamus interdum nisl mollis massa iaculis dignissim. Curabitur ornare consectetur purus, a vehicula tortor volutpat in. Cras vitae est vel est viverra ullamcorper a vitae magna. Donec efficitur pellentesque congue. Sed at velit mauris. Integer blandit a dolor ut rutrum. Donec iaculis posuere sapien, nec faucibus libero efficitur quis. Proin ullamcorper purus vitae turpis egestas, at feugiat velit congue. Donec pellentesque mauris urna, eget aliquam lacus sollicitudin non. Cras ultricies, nibh nec scelerisque pretium, tortor augue imperdiet enim, ut gravida nisi leo sed augue. Phasellus tempus diam velit, id volutpat magna semper et.
+                                
+                                Nam ut vulputate neque. Sed nec ornare sem. Sed vehicula elit id ligula luctus, ac congue leo aliquet. Aliquam erat volutpat. Etiam faucibus urna eros, a vestibulum diam imperdiet in. Mauris egestas tristique porta. Suspendisse consequat nunc nec vulputate vestibulum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed id massa pretium augue ornare gravida. Mauris consequat libero sed consequat tincidunt. </p>
+                            <!-- Category Select Placeholder (consider replacing with actual category select partial content) -->
+                            <div class="container mt-4">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <div class="d-flex align-items-center justify-content-start category-bar">
+                                            <span class="category-label">Categories</span>
+                                            <div class="category-links">
+                                                <span class="category-label">:</span>
+                                                <% if (categories && categories.length) { %> <!-- Use 'categories' instead of 'page.Categories' -->
+                                                    <% categories.forEach((category) => { %>
+                                                        <a href="/wiki/category/<%= category.name.replace(/_/g, ' ') %>" class="category-link" title="Category: <%= category.name.replace(/_/g, ' ') %>"><%= category.name.replace(/_/g, ' ') %></a>
+                                                    <% }); %>
+                                                <% } %>
+                                            </div>      
+                                            <div id="categoryTagsContainer" style="display: none;"></div>
+                                            <div id="categoryInputContainer" style="display: none;">
+                                                <input type="text" id="newCategoryName" placeholder="Add category...">
+                                                <div id="categorySuggestions"></div>
+                                            </div>                                                
+                                            <% if (typeof showAddCategoryButton !== 'undefined' && showAddCategoryButton) { %> <!-- Check 'showAddCategoryButton' explicitly -->
+                                                <button class="btn btn-primary btn-flat btn-sm ml-2" type="button" id="CategorySelectAdd">Add category</button>
+                                            <% } %>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!-- Inserted Footer Partial Content -->
+                    <footer class="custom-footer">
+                        <div class="container text-center">
+                            <p> <%= siteConfig.wikiName %> is a <%= siteConfig.siteName %> <%= siteConfig.category %> Community.</p>
+                            <p>&copy; 2024 <%= siteConfig.siteName %>. All rights reserved.</p>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/scripts.js"></script>
+</body>
+</html>
