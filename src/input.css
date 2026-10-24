@@ -158,6 +158,30 @@ body {
   border-radius: 0.2rem;
 }
 
+/* Editor Toolbar Buttons */
+.btn-toolbar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-toolbar:hover {
+  background-color: #f3f4f6;
+  border-color: #9ca3af;
+  color: #111827;
+}
+
+.btn-toolbar:active {
+  background-color: #e5e7eb;
+}
+
 /* Form Controls */
 .form-group {
   margin-bottom: 1rem;
