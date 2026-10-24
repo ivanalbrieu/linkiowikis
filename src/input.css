@@ -86,6 +86,173 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* MediaWiki HTML in wikitext styles (https://www.mediawiki.org/wiki/Help:HTML_in_wikitext) */
+.wiki-rendered-content u {
+  text-decoration: underline;
+}
+
+.wiki-rendered-content s,
+.wiki-rendered-content del,
+.wiki-rendered-content strike {
+  text-decoration: line-through;
+}
+
+.wiki-rendered-content ins {
+  text-decoration: underline;
+  background-color: #e6ffe6;
+}
+
+.wiki-rendered-content sub {
+  vertical-align: sub;
+  font-size: 0.8em;
+}
+
+.wiki-rendered-content sup {
+  vertical-align: super;
+  font-size: 0.8em;
+}
+
+.wiki-rendered-content mark {
+  background-color: #fff3bf;
+  color: #212529;
+  padding: 0.1em 0.3em;
+  border-radius: 2px;
+}
+
+.wiki-rendered-content kbd {
+  background-color: #eaecf0;
+  border: 1px solid #c8ccd1;
+  border-radius: 3px;
+  padding: 0.1em 0.4em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.wiki-rendered-content code {
+  background-color: #f8f9fa;
+  border: 1px solid #eaecf0;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  color: #d63384;
+}
+
+.wiki-rendered-content pre {
+  background-color: #f8f9fa;
+  border: 1px solid #eaecf0;
+  padding: 0.75rem 1rem;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  overflow-x: auto;
+  margin: 0.75rem 0 1rem 0;
+  line-height: 1.5;
+}
+
+.wiki-rendered-content pre code {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.wiki-rendered-content blockquote {
+  border-left: 4px solid #a2a9b1;
+  padding: 0.5rem 1rem;
+  margin: 0.75rem 0 1rem 0;
+  color: #54595d;
+  background-color: #f8f9fa;
+}
+
+.wiki-rendered-content abbr[title] {
+  border-bottom: 1px dotted #54595d;
+  cursor: help;
+  text-decoration: none;
+}
+
+.wiki-rendered-content hr {
+  border: 0;
+  border-top: 1px solid #a2a9b1;
+  margin: 1.5rem 0;
+}
+
+.wiki-rendered-content dl {
+  margin: 0.5rem 0 1rem 0;
+}
+
+.wiki-rendered-content dt {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.wiki-rendered-content dd {
+  margin-left: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.wiki-rendered-content big {
+  font-size: 1.2em;
+}
+
+.wiki-rendered-content q {
+  quotes: "“" "”";
+}
+
+/* MediaWiki Tables (.wikitable & standard tables) */
+.wiki-rendered-content table,
+.wiki-rendered-content .wikitable {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background-color: #f8f9fa;
+  color: #202122;
+  border: 1px solid #a2a9b1;
+  width: auto;
+}
+
+.wiki-rendered-content table th,
+.wiki-rendered-content .wikitable th {
+  background-color: #eaecf0;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #a2a9b1;
+}
+
+.wiki-rendered-content table td,
+.wiki-rendered-content .wikitable td {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #a2a9b1;
+  background-color: #ffffff;
+}
+
+.wiki-rendered-content table caption,
+.wiki-rendered-content .wikitable caption {
+  font-weight: bold;
+  font-size: 1.05em;
+  padding-bottom: 0.3rem;
+  text-align: center;
+}
+
+/* Common MediaWiki alignment classes */
+.wiki-rendered-content .center {
+  text-align: center;
+}
+
+.wiki-rendered-content .floatleft {
+  float: left;
+  clear: left;
+  margin: 0 1rem 0.5rem 0;
+}
+
+.wiki-rendered-content .floatright {
+  float: right;
+  clear: right;
+  margin: 0 0 0.5rem 1rem;
+}
+
 /* Custom Buttons */
 .btn {
   display: inline-flex;

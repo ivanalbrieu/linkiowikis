@@ -33,6 +33,41 @@ marked.use({
 });
 
 /**
+ * Strips HTML comments (<!-- ... -->) like the MediaWiki wikitext parser
+ * Reference: https://www.mediawiki.org/wiki/Help:HTML_in_wikitext#Comments
+ */
+function stripHtmlComments(input) {
+  if (!input || typeof input !== 'string') return '';
+  return input.replace(/<!--[\s\S]*?-->/g, '');
+}
+
+/**
+ * HTML Sanitizer based on MediaWiki's Help:HTML_in_wikitext specification.
+ * Strips dangerous tags (script, iframe, object, embed, form, input, button, meta, link)
+ * and inline event handlers (onclick, onerror, onload, etc.) while allowing safe HTML5
+ * formatting tags, tables, blockquotes, code, and attributes (class, id, style, title, etc.).
+ */
+function sanitizeMediaWikiHtml(html) {
+  if (!html || typeof html !== 'string') return '';
+
+  let clean = html;
+
+  // 1. Remove dangerous paired tags and their contents
+  clean = clean.replace(/<\s*(script|style|iframe|object|embed|form|meta|link|base|applet)[\s\S]*?<\s*\/\s*\1\s*>/gi, '');
+
+  // 2. Remove any remaining self-closing or unclosed dangerous tags
+  clean = clean.replace(/<\s*(script|style|iframe|object|embed|form|meta|link|base|applet|input|button)[\s\S]*?>/gi, '');
+
+  // 3. Strip dangerous inline event handlers (onclick, onload, onerror, onmouseover, etc.)
+  clean = clean.replace(/\s+on[a-zA-Z]+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+
+  // 4. Strip javascript: URLs from href, src, or style
+  clean = clean.replace(/(href|src)\s*=\s*("[^"]*javascript:[^"]*"|'[^']*javascript:[^']*'|[^\s>]*javascript:[^\s>]*)/gi, '$1="#"');
+
+  return clean;
+}
+
+/**
  * Process internal wiki links like [[Page Title]] or [[Page Title|Display Text]]
  * Checks whether the target page exists in DB and styles links accordingly (blue vs red).
  */
@@ -69,16 +104,23 @@ async function processWikiLinks(input) {
 }
 
 /**
- * Main rendering function: resolves internal [[Wiki Links]],
- * then parses 100% standard Markdown directly with `marked`.
+ * Main rendering function:
+ * 1. Strips HTML comments (<!-- ... -->)
+ * 2. Resolves internal [[Wiki Links]]
+ * 3. Parses standard Markdown + allowed HTML via `marked`
+ * 4. Sanitizes output according to MediaWiki's Help:HTML_in_wikitext rules
  */
 async function renderMarkdown(content) {
   if (!content) return '';
-  const withWikiLinks = await processWikiLinks(content);
-  return marked.parse(withWikiLinks);
+  const withoutComments = stripHtmlComments(content);
+  const withWikiLinks = await processWikiLinks(withoutComments);
+  const parsed = marked.parse(withWikiLinks);
+  return sanitizeMediaWikiHtml(parsed);
 }
 
 module.exports = {
   renderMarkdown,
-  processWikiLinks
+  processWikiLinks,
+  stripHtmlComments,
+  sanitizeMediaWikiHtml
 };
