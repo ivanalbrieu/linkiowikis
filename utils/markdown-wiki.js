@@ -47,24 +47,6 @@ function processCenterTags(input) {
 }
 
 /**
- * Converts MediaWiki wikitext external links to standard Markdown:
- * - [http://url display text] -> [display text](http://url)
- * - [http://url] -> [http://url](http://url)
- * Also fixes accidental [http://url display text](url) copy-paste artifacts.
- */
-function processExternalLinks(input) {
-  if (!input || typeof input !== 'string') return '';
-  // 1. Fix accidental [http://url display text](url) -> [display text](url)
-  let res = input.replace(/\[https?:\/\/[^\s\]]+\s+([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '[$1]($2)');
-  // 2. Convert MediaWiki [http://url display text] or [http://url] (not followed by '(') to standard Markdown
-  res = res.replace(/\[(https?:\/\/[^\s\]]+)(?:\s+([^\]]+))?\](?!\()/g, (match, url, text) => {
-    const linkText = text ? text.trim() : url.trim();
-    return `[${linkText}](${url.trim()})`;
-  });
-  return res;
-}
-
-/**
  * Strips HTML comments (<!-- ... -->) like the MediaWiki wikitext parser
  * Reference: https://www.mediawiki.org/wiki/Help:HTML_in_wikitext#Comments
  */
@@ -139,17 +121,15 @@ async function processWikiLinks(input) {
  * Main rendering function:
  * 1. Strips HTML comments (<!-- ... -->)
  * 2. Normalizes <center>/<centre> tags and ensures nested Markdown parsing
- * 3. Converts external wikitext links ([http://url text]) to Markdown
- * 4. Resolves internal [[Wiki Links]]
- * 5. Parses standard Markdown + allowed HTML via `marked`
- * 6. Sanitizes output according to MediaWiki's Help:HTML_in_wikitext rules
+ * 3. Resolves internal [[Wiki Links]]
+ * 4. Parses 100% standard Markdown + allowed HTML via `marked`
+ * 5. Sanitizes output according to MediaWiki's Help:HTML_in_wikitext rules
  */
 async function renderMarkdown(content) {
   if (!content) return '';
   const withoutComments = stripHtmlComments(content);
   const withCenterNormalized = processCenterTags(withoutComments);
-  const withExternalLinks = processExternalLinks(withCenterNormalized);
-  const withWikiLinks = await processWikiLinks(withExternalLinks);
+  const withWikiLinks = await processWikiLinks(withCenterNormalized);
   const parsed = marked.parse(withWikiLinks);
   return sanitizeMediaWikiHtml(parsed);
 }
@@ -158,7 +138,6 @@ module.exports = {
   renderMarkdown,
   processWikiLinks,
   processCenterTags,
-  processExternalLinks,
   stripHtmlComments,
   sanitizeMediaWikiHtml
 };
