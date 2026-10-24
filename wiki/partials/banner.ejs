@@ -15,7 +15,7 @@
     <div class="flex items-center">
         <% if (isAuthenticated && currentUser) { %>
             <div class="flex items-center gap-2">
-                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border border-white object-cover block flex-shrink-0" alt="<%= currentUser.username %>">
+                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border-2 border-white object-cover block flex-shrink-0" alt="<%= currentUser.username %>">
                 <div class="relative dropdown">
                     <a class="text-white/90 hover:text-white text-sm cursor-pointer dropdown-toggle no-underline inline-flex items-center gap-1.5 py-1 font-normal transition-colors" id="navbarDropdownMenuLink" role="button">
                         <span><%= currentUser.username %></span>

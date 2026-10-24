@@ -26,7 +26,7 @@
                 <% if (editMode) { %>
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-2 border-b border-gray-200">
                         <div>
-                            <h2 class="text-2xl font-medium text-black m-0">Editing: <%= title.replace(/_/g, ' ') %></h2>
+                            <h1 class="text-2xl font-medium text-black m-0">Editing: <%= title.replace(/_/g, ' ') %></h1>
                             <p class="text-xs text-gray-500 m-0 mt-0.5">Edit this article using pure Markdown syntax and <code>[[WikiLinks]]</code>.</p>
                         </div>
                         <!-- Mode Tabs (Write vs Preview) -->
@@ -137,7 +137,7 @@
                 <% } else { %>
                     <!-- Page Content Display -->
                     <div class="flex justify-between items-center mb-3">
-                        <h2 class="text-2xl font-medium text-black m-0"><%= title.replace(/_/g, ' ') %></h2>
+                        <h1 class="text-2xl font-medium text-black m-0"><%= title.replace(/_/g, ' ') %></h1>
                         <div>
                             <% if (pageExists) { %>
                                 <!-- Dropdown Menu for Page Actions -->
