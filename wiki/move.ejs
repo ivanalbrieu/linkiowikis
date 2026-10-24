@@ -18,7 +18,7 @@
         <div class="bg-[#748a88] shadow-md">
             <%- include('./partials/header') %>
             <div class="bg-white min-h-[160px] p-6 shadow-sm">
-                <h1 class="text-2xl font-medium text-black m-0 mb-4">Move <%= title.replace(/_/g, ' ') %></h1>
+                <h1 class="text-[2rem] font-normal text-black m-0 mb-4 leading-tight">Move <%= title.replace(/_/g, ' ') %></h1>
                 <% if (error_msg.length > 0) { %>
                     <div class="alert alert-danger" role="alert">
                         <%= error_msg %>

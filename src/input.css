@@ -69,6 +69,22 @@ body {
   color: #0a58ca;
 }
 
+.wiki-rendered-content a.external,
+.wiki-rendered-content a[target="_blank"] {
+  color: #0d6efd;
+}
+
+.wiki-rendered-content a.external:hover,
+.wiki-rendered-content a[target="_blank"]:hover {
+  text-decoration: underline;
+  color: #0a58ca;
+}
+
+.wiki-rendered-content a.external i {
+  text-decoration: none !important;
+  display: inline-block;
+}
+
 .wiki-rendered-content a[style*="color:red"],
 .wiki-rendered-content a.text-danger {
   color: #dc3545 !important;
@@ -236,9 +252,22 @@ body {
   text-align: center;
 }
 
-/* Common MediaWiki alignment classes */
-.wiki-rendered-content .center {
+/* Common MediaWiki alignment classes & tags */
+.wiki-rendered-content .center,
+.wiki-rendered-content .centre,
+.wiki-rendered-content center,
+.wiki-rendered-content centre {
   text-align: center;
+  display: block;
+}
+
+.wiki-rendered-content .center > table,
+.wiki-rendered-content .centre > table,
+.wiki-rendered-content center > table,
+.wiki-rendered-content centre > table {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
 }
 
 .wiki-rendered-content .floatleft {

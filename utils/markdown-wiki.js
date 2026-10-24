@@ -25,12 +25,44 @@ marked.use({
       const titleAttr = title ? ` title="${title}"` : '';
       const isExternal = /^https?:\/\//i.test(href);
       if (isExternal) {
-        return `<a href="${href}" target="_blank" rel="noopener noreferrer"${titleAttr}>${text} <i class="fas fa-external-link-alt fa-xs"></i></a>`;
+        const hasIcon = /fa-(?:arrow-up-right-from-square|external-link-alt|up-right-from-square)/i.test(text);
+        const iconHtml = hasIcon ? '' : ' <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-0.5"></i>';
+        return `<a href="${href}" class="external" target="_blank" rel="noopener noreferrer"${titleAttr}>${text}${iconHtml}</a>`;
       }
       return `<a href="${href}"${titleAttr}>${text}</a>`;
     }
   }
 });
+
+/**
+ * Normalizes <centre> and <center> tags and ensures block-level center tags
+ * have blank lines so marked parses Markdown content inside them.
+ */
+function processCenterTags(input) {
+  if (!input || typeof input !== 'string') return '';
+  let res = input.replace(/<\s*centre\s*>/gi, '<center>').replace(/<\s*\/centre\s*>/gi, '</center>');
+  res = res.replace(/(^|\n)<\s*center\s*>\r?\n/gi, '$1<center>\n\n');
+  res = res.replace(/\r?\n<\s*\/center\s*>($|\n)/gi, '\n\n</center>$1');
+  return res;
+}
+
+/**
+ * Converts MediaWiki wikitext external links to standard Markdown:
+ * - [http://url display text] -> [display text](http://url)
+ * - [http://url] -> [http://url](http://url)
+ * Also fixes accidental [http://url display text](url) copy-paste artifacts.
+ */
+function processExternalLinks(input) {
+  if (!input || typeof input !== 'string') return '';
+  // 1. Fix accidental [http://url display text](url) -> [display text](url)
+  let res = input.replace(/\[https?:\/\/[^\s\]]+\s+([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '[$1]($2)');
+  // 2. Convert MediaWiki [http://url display text] or [http://url] (not followed by '(') to standard Markdown
+  res = res.replace(/\[(https?:\/\/[^\s\]]+)(?:\s+([^\]]+))?\](?!\()/g, (match, url, text) => {
+    const linkText = text ? text.trim() : url.trim();
+    return `[${linkText}](${url.trim()})`;
+  });
+  return res;
+}
 
 /**
  * Strips HTML comments (<!-- ... -->) like the MediaWiki wikitext parser
@@ -106,14 +138,18 @@ async function processWikiLinks(input) {
 /**
  * Main rendering function:
  * 1. Strips HTML comments (<!-- ... -->)
- * 2. Resolves internal [[Wiki Links]]
- * 3. Parses standard Markdown + allowed HTML via `marked`
- * 4. Sanitizes output according to MediaWiki's Help:HTML_in_wikitext rules
+ * 2. Normalizes <center>/<centre> tags and ensures nested Markdown parsing
+ * 3. Converts external wikitext links ([http://url text]) to Markdown
+ * 4. Resolves internal [[Wiki Links]]
+ * 5. Parses standard Markdown + allowed HTML via `marked`
+ * 6. Sanitizes output according to MediaWiki's Help:HTML_in_wikitext rules
  */
 async function renderMarkdown(content) {
   if (!content) return '';
   const withoutComments = stripHtmlComments(content);
-  const withWikiLinks = await processWikiLinks(withoutComments);
+  const withCenterNormalized = processCenterTags(withoutComments);
+  const withExternalLinks = processExternalLinks(withCenterNormalized);
+  const withWikiLinks = await processWikiLinks(withExternalLinks);
   const parsed = marked.parse(withWikiLinks);
   return sanitizeMediaWikiHtml(parsed);
 }
@@ -121,6 +157,8 @@ async function renderMarkdown(content) {
 module.exports = {
   renderMarkdown,
   processWikiLinks,
+  processCenterTags,
+  processExternalLinks,
   stripHtmlComments,
   sanitizeMediaWikiHtml
 };
