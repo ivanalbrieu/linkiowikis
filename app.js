@@ -85,18 +85,22 @@ const revisionsRouter = require('./routes/revisions');
 const moveRouter = require('./routes/move');
 const purgeRouter = require('./routes/purge');
 const deleteRouter = require('./routes/delete');
+const restoreRouter = require('./routes/restore');
 
 // Use routers for specific paths first
 app.use('/wiki/', loginRouter); // Handles both login and register
 app.use('/wiki/', accountRouter);
 
-// Then use the pages router
-app.use('/wiki', pagesRouter);
+// Action subroutes
 app.use('/wiki', editorRouter);
 app.use('/wiki', revisionsRouter);
 app.use('/wiki', moveRouter);
 app.use('/wiki', purgeRouter);
 app.use('/wiki', deleteRouter);
+app.use('/wiki', restoreRouter);
+
+// General page routing
+app.use('/wiki', pagesRouter);
 
 app.get('/wiki/', (req, res) => {
   // Since this is the main page, you could set a default title like 'Main Page'

@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <% if (editMode) { %>
-        <title>Editing <%= title.replace(/_/g, ' ') %> | Test Wiki | linkiowikis</title>
+        <title>Editing <%= title.replace(/_/g, ' ') %> | <%= siteConfig.wikiName %> | <%= siteConfig.siteName %></title>
     <% } else { %>
-        <title><%= title.replace(/_/g, ' ') %> | Test Wiki | linkiowikis</title>
+        <title><%= title.replace(/_/g, ' ') %> | <%= siteConfig.wikiName %> | <%= siteConfig.siteName %></title>
     <% } %>
     <!-- Tailwind CSS -->
     <link href="/css/tailwind.css" rel="stylesheet">
@@ -24,22 +24,115 @@
             <div class="bg-white min-h-[160px] p-6 shadow-sm">
                 <!-- Page Editing Interface -->
                 <% if (editMode) { %>
-                    <h2 class="text-2xl font-medium text-black m-0 mb-4"><%= title.replace(/_/g, ' ') %></h2>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-2 border-b border-gray-200">
+                        <div>
+                            <h2 class="text-2xl font-medium text-black m-0">Editing: <%= title.replace(/_/g, ' ') %></h2>
+                            <p class="text-xs text-gray-500 m-0 mt-0.5">Edit this article using pure Markdown syntax and <code>[[WikiLinks]]</code>.</p>
+                        </div>
+                        <!-- Mode Tabs (Write vs Preview) -->
+                        <div class="inline-flex rounded border border-gray-300 p-0.5 bg-gray-100 self-start sm:self-auto">
+                            <button type="button" id="tabWriteBtn" class="px-3 py-1 text-xs font-semibold rounded bg-white text-gray-800 shadow-sm border border-gray-200 transition-colors">
+                                <i class="fa-solid fa-pen mr-1"></i> Write
+                            </button>
+                            <button type="button" id="tabPreviewBtn" class="px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                                <i class="fa-solid fa-eye mr-1"></i> Live Preview
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Editor form -->
-                    <form action="/wiki/<%= title.replace(/\s/g, '_') %>/save" method="POST">
-                        <div class="form-group">
-                            <label for="textInput" class="block font-medium mb-1">Content (Markdown)</label>
-                            <textarea id="textInput" class="form-control font-mono" name="content" rows="20" placeholder="Enter Markdown content... Use [[Page Title]] for internal wiki links."><%= page ? page.content : '' %></textarea>
+                    <form id="wikiEditorForm" action="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/save" method="POST">
+                        <div id="editorWriteSection">
+                            <!-- Extensible Markdown Formatting Toolbar -->
+                            <div class="flex flex-wrap items-center gap-1 p-2 bg-[#f8f9fa] border border-gray-300 border-b-0 rounded-t text-sm">
+                                <!-- Headings -->
+                                <button type="button" class="btn-toolbar px-2 py-1 hover:bg-gray-200 rounded text-xs font-bold" data-action="h1" title="Heading 1">H1</button>
+                                <button type="button" class="btn-toolbar px-2 py-1 hover:bg-gray-200 rounded text-xs font-bold" data-action="h2" title="Heading 2">H2</button>
+                                <button type="button" class="btn-toolbar px-2 py-1 hover:bg-gray-200 rounded text-xs font-bold" data-action="h3" title="Heading 3">H3</button>
+                                <span class="text-gray-300 mx-1">|</span>
+                                <!-- Text Styles -->
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center font-bold" data-action="bold" title="Bold (Ctrl+B)"><strong>B</strong></button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center italic" data-action="italic" title="Italic (Ctrl+I)"><em>I</em></button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center line-through" data-action="strike" title="Strikethrough">S</button>
+                                <span class="text-gray-300 mx-1">|</span>
+                                <!-- Links -->
+                                <button type="button" class="btn-toolbar px-2 py-1 hover:bg-gray-200 rounded text-xs font-medium flex items-center gap-1" data-action="wikilink" title="Internal Wiki Link [[Page Title]]">
+                                    <i class="fa-solid fa-link text-blue-600"></i> [[WikiLink]]
+                                </button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="link" title="External Link [text](url)">
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                                </button>
+                                <span class="text-gray-300 mx-1">|</span>
+                                <!-- Lists & Blocks -->
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="ul" title="Bullet List">
+                                    <i class="fa-solid fa-list-ul text-xs"></i>
+                                </button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="ol" title="Numbered List">
+                                    <i class="fa-solid fa-list-ol text-xs"></i>
+                                </button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="quote" title="Blockquote">
+                                    <i class="fa-solid fa-quote-left text-xs"></i>
+                                </button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="code" title="Code Block">
+                                    <i class="fa-solid fa-code text-xs"></i>
+                                </button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="table" title="Insert Table">
+                                    <i class="fa-solid fa-table text-xs"></i>
+                                </button>
+                                <button type="button" class="btn-toolbar p-1.5 hover:bg-gray-200 rounded w-7 h-7 flex items-center justify-center" data-action="hr" title="Horizontal Rule">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <span class="text-gray-300 mx-1">|</span>
+                                <!-- Templates Dropdown -->
+                                <div class="relative dropdown">
+                                    <button type="button" class="btn-toolbar px-2 py-1 hover:bg-gray-200 rounded text-xs flex items-center gap-1 dropdown-toggle" id="templatesDropdownBtn">
+                                        <i class="fa-solid fa-cube text-xs text-amber-600"></i> Insert Template
+                                    </button>
+                                    <ul class="dropdown-menu text-xs" aria-labelledby="templatesDropdownBtn">
+                                        <li><a class="dropdown-item template-insert" data-template="article">Standard Article Structure</a></li>
+                                        <li><a class="dropdown-item template-insert" data-template="infobox">Simple Infobox</a></li>
+                                        <li><a class="dropdown-item template-insert" data-template="stub">Stub Notice</a></li>
+                                        <li><a class="dropdown-item template-insert" data-template="signature">Signature (~~~~)</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group mb-4">
+                                <textarea id="textInput" class="form-control font-mono text-sm leading-relaxed rounded-t-none border-t-0 focus:border-blue-500" name="content" rows="22" placeholder="Enter pure Markdown content here... Use [[Page Title]] or [[Page Title|Display Name]] for internal wiki cross-links."><%= page ? page.content : '' %></textarea>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="categoriesInput" class="block font-medium mb-1">Categories</label>
-                            <input type="text" id="categoriesInput" class="form-control" name="categories" autocomplete="off" placeholder="Enter categories separated by spaces. Use '_' for spaces within category titles." value="<%= categoriesString %>">
+
+                        <!-- Live Preview Display Container (Hidden by default) -->
+                        <div id="editorPreviewSection" class="hidden mb-6">
+                            <div class="bg-gray-50 border border-gray-200 rounded p-3 mb-2 flex items-center justify-between text-xs text-gray-600">
+                                <span class="font-semibold flex items-center gap-1.5"><i class="fa-solid fa-eye text-blue-600"></i> Live Markdown Preview</span>
+                                <span>Updates automatically when you switch to this tab</span>
+                            </div>
+                            <div id="editorPreviewOutput" class="wiki-rendered-content bg-white border border-gray-200 rounded p-6 min-h-[300px]">
+                                <div class="text-gray-400 italic">Generating preview...</div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="justificationInput" class="block font-medium mb-1">Justification</label>
-                            <input type="text" id="justificationInput" class="form-control" name="justification" placeholder="Enter justification for your edit">
+
+                        <!-- Categories & Justification Fields -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="form-group m-0">
+                                <label for="categoriesInput" class="block font-medium mb-1 text-sm text-gray-700">Categories</label>
+                                <input type="text" id="categoriesInput" class="form-control text-sm" name="categories" autocomplete="off" placeholder="Space-separated categories (e.g. Wiki Rules System)" value="<%= categoriesString %>">
+                            </div>
+                            <div class="form-group m-0">
+                                <label for="justificationInput" class="block font-medium mb-1 text-sm text-gray-700">Edit Summary / Justification</label>
+                                <input type="text" id="justificationInput" class="form-control text-sm" name="justification" placeholder="Briefly describe what you changed">
+                            </div>
                         </div>
-                        <button class="btn btn-primary btn-flat text-sm px-4 py-2" type="submit">Save Changes</button>
+
+                        <!-- Submit / Cancel Action Buttons -->
+                        <div class="flex items-center gap-3 pt-2">
+                            <button class="btn btn-primary btn-flat text-sm px-4 py-2" type="submit" id="savePageBtn">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> Save Changes
+                            </button>
+                            <a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>" class="btn btn-secondary text-sm px-4 py-2" id="cancelEditBtn">
+                                Cancel
+                            </a>
+                        </div>
                     </form>
                 <% } else { %>
                     <!-- Page Content Display -->
@@ -67,7 +160,8 @@
                                         <i class="fa-solid fa-plus"></i> Create
                                     </button>
                                     <ul class="dropdown-menu right-0" aria-labelledby="pageActionsMenu">
-                                        <li><a class="dropdown-item" href="/wiki/<%= page.title.replace(/\s/g, '_') %>/edit">Edit</a></li>
+                                        <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/edit">Edit</a></li>
+                                        <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/restore"><i class="fa-solid fa-rotate-left"></i> Restore page</a></li>
                                     </ul>
                                 </div>
                             <% } %>

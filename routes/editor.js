@@ -6,6 +6,19 @@ const Category = require('../models/Category');
 const moment = require('moment');
 const Revision = require('../models/Revision');
 const myCache = require('../config/cache');
+const { renderMarkdown } = require('../utils/markdown-wiki');
+
+// Route for live Markdown preview
+router.post('/api/preview', async (req, res) => {
+    try {
+        const { content } = req.body;
+        const html = await renderMarkdown(content || '');
+        res.json({ html });
+    } catch (error) {
+        console.error('Preview render error:', error);
+        res.status(500).json({ error: 'Failed to render preview' });
+    }
+});
 
 // Route to handle editing a page or creating a new one
 router.get('/:title/edit', async (req, res) => {
@@ -128,7 +141,7 @@ router.post('/:title/save', async (req, res) => {
             });
         }
 
-        const categoryNames = categories.split(' ').filter(Boolean);
+        const categoryNames = categories ? categories.split(' ').filter(Boolean) : [];
         const categoryInstances = await Promise.all(categoryNames.map(async (name) => {
             const [category, created] = await Category.findOrCreate({
                 where: { name: name.trim() }
@@ -141,7 +154,7 @@ router.post('/:title/save', async (req, res) => {
         // Invalidate the cache
         myCache.del('nonRedirectPageCount');
 
-        res.redirect(`/wiki/${encodeURIComponent(titleParam)}`);
+        res.redirect(`/wiki/${encodeURIComponent(titleParam.replace(/\s/g, '_'))}`);
     } catch (error) {
         console.error('Failed to save the page or handle categories:', error);
         res.status(500).send('Error saving the page or handling categories.');

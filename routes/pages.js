@@ -69,10 +69,14 @@ router.get('/:title', async (req, res, next) => {
         let previouslyDeletedNotice = ""; // Initialize the notice as an empty string
 
         if (deletedPage) {
-            // Page was previously deleted, prepare the Bootstrap warning alert
+            const encodedTitle = encodeURIComponent(titleParam.replace(/\s/g, '_'));
+            const dateStr = deletedPage.deleted_at ? new Date(deletedPage.deleted_at).toLocaleDateString() : '';
             previouslyDeletedNotice = `
-                <div class="alert alert-danger" role="alert">
-                    This page was previously deleted.
+                <div class="alert alert-danger flex items-center justify-between flex-wrap gap-2 mb-4" role="alert">
+                    <span><strong>Notice:</strong> This page was previously deleted${dateStr ? ' on ' + dateStr : ''}.</span>
+                    <a href="/wiki/${encodedTitle}/restore" class="btn btn-primary btn-flat text-xs px-2.5 py-1 text-black font-medium inline-flex items-center gap-1.5 no-underline">
+                        <i class="fa-solid fa-rotate-left"></i> View deleted history & restore
+                    </a>
                 </div>`;
         }
 
@@ -133,7 +137,7 @@ router.get('/:title', async (req, res, next) => {
                 pageExists: false,
                 page: {
                     title: titleParam,
-                    content: previouslyDeletedNotice + "This page does not exist. You can create this page."
+                    content: previouslyDeletedNotice + "<p class=\"text-gray-700\">This page does not exist. You can create this page by clicking the \"Create\" button.</p>"
                 },
                 editMode: false
             });
@@ -163,14 +167,15 @@ router.post('/:title/addCategories', async (req, res) => {
             const [category, created] = await Category.findOrCreate({
                 where: { name: trimmedCategoryName }
             });
-            await page.addCategory(category); // Assuming `addCategory` is correctly set up for many-to-many relationship
+
+            // Associate the category with the page
+            await page.addCategory(category);
         }
 
-        // Respond with success message
-        res.json({ message: 'Categories successfully added' });
+        res.status(200).send('Categories added successfully');
     } catch (error) {
-        console.error('Error adding categories:', error);
-        res.status(500).send('Failed to add categories');
+        console.error('Failed to add categories:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
 

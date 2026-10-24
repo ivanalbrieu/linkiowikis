@@ -379,4 +379,156 @@ document.addEventListener('DOMContentLoaded', function() {
             newCategoryNameInput.focus();
         });
     }
+
+    // ==========================================
+    // Markdown Editor Toolbar, Shortcuts & Live Preview
+    // ==========================================
+    const textInput = document.getElementById('textInput');
+    const editorForm = document.getElementById('wikiEditorForm');
+    const tabWriteBtn = document.getElementById('tabWriteBtn');
+    const tabPreviewBtn = document.getElementById('tabPreviewBtn');
+    const editorWriteSection = document.getElementById('editorWriteSection');
+    const editorPreviewSection = document.getElementById('editorPreviewSection');
+    const editorPreviewOutput = document.getElementById('editorPreviewOutput');
+
+    if (textInput && editorForm) {
+        let isFormDirty = false;
+
+        textInput.addEventListener('input', function() {
+            isFormDirty = true;
+        });
+
+        // Warn before leaving page with unsaved changes
+        window.addEventListener('beforeunload', function(e) {
+            if (isFormDirty) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                return e.returnValue;
+            }
+        });
+
+        // Reset dirty flag on legitimate submit
+        editorForm.addEventListener('submit', function() {
+            isFormDirty = false;
+        });
+
+        // Helper to insert or wrap selected text
+        function insertOrWrapText(before, after = '', defaultPlaceholder = '') {
+            textInput.focus();
+            const start = textInput.selectionStart;
+            const end = textInput.selectionEnd;
+            const selectedText = textInput.value.substring(start, end) || defaultPlaceholder;
+            const replacement = before + selectedText + after;
+            textInput.setRangeText(replacement, start, end, 'select');
+            textInput.dispatchEvent(new Event('input'));
+        }
+
+        // Toolbar buttons handler
+        document.querySelectorAll('.btn-toolbar[data-action]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const action = this.getAttribute('data-action');
+                switch (action) {
+                    case 'h1': insertOrWrapText('# ', '', 'Heading 1'); break;
+                    case 'h2': insertOrWrapText('## ', '', 'Heading 2'); break;
+                    case 'h3': insertOrWrapText('### ', '', 'Heading 3'); break;
+                    case 'bold': insertOrWrapText('**', '**', 'bold text'); break;
+                    case 'italic': insertOrWrapText('*', '*', 'italic text'); break;
+                    case 'strike': insertOrWrapText('~~', '~~', 'strikethrough text'); break;
+                    case 'wikilink': insertOrWrapText('[[', ']]', 'Page Title'); break;
+                    case 'link': insertOrWrapText('[', '](https://example.com)', 'Link text'); break;
+                    case 'ul': insertOrWrapText('- ', '', 'List item'); break;
+                    case 'ol': insertOrWrapText('1. ', '', 'List item'); break;
+                    case 'quote': insertOrWrapText('> ', '', 'Quote text'); break;
+                    case 'code': insertOrWrapText('```\n', '\n```', 'console.log("Hello World");'); break;
+                    case 'table':
+                        insertOrWrapText('\n| Column 1 | Column 2 | Column 3 |\n|---|---|---|\n| Item A | Item B | Item C |\n| Item D | Item E | Item F |\n\n');
+                        break;
+                    case 'hr': insertOrWrapText('\n---\n'); break;
+                }
+            });
+        });
+
+        // Template insertions
+        document.querySelectorAll('.template-insert').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const template = this.getAttribute('data-template');
+                switch (template) {
+                    case 'article':
+                        insertOrWrapText(
+                            '## Overview\nBrief description of the subject.\n\n## History\nDetailed background and timeline.\n\n## Key Features\n- Point 1\n- Point 2\n\n## References\n* External reference links or notes.\n'
+                        );
+                        break;
+                    case 'infobox':
+                        insertOrWrapText(
+                            '| Property | Details |\n|---|---|\n| **Name** | Value |\n| **Type** | Value |\n| **Created** | Value |\n| **Status** | Active |\n\n'
+                        );
+                        break;
+                    case 'stub':
+                        insertOrWrapText('> *This article is a stub. You can help by expanding it.*\n\n');
+                        break;
+                    case 'signature':
+                        insertOrWrapText(' ~~~~ ');
+                        break;
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        textInput.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+                if (e.key === 'b' || e.key === 'B') {
+                    e.preventDefault();
+                    insertOrWrapText('**', '**', 'bold text');
+                } else if (e.key === 'i' || e.key === 'I') {
+                    e.preventDefault();
+                    insertOrWrapText('*', '*', 'italic text');
+                } else if (e.key === 'k' || e.key === 'K') {
+                    e.preventDefault();
+                    insertOrWrapText('[[', ']]', 'Page Title');
+                } else if (e.key === 's' || e.key === 'S') {
+                    e.preventDefault();
+                    editorForm.requestSubmit();
+                }
+            }
+        });
+
+        // Write vs Live Preview Tab Switching
+        if (tabWriteBtn && tabPreviewBtn && editorWriteSection && editorPreviewSection) {
+            tabWriteBtn.addEventListener('click', function() {
+                editorWriteSection.classList.remove('hidden');
+                editorPreviewSection.classList.add('hidden');
+                tabWriteBtn.className = 'px-3 py-1 text-xs font-semibold rounded bg-white text-gray-800 shadow-sm border border-gray-200 transition-colors';
+                tabPreviewBtn.className = 'px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors';
+                textInput.focus();
+            });
+
+            tabPreviewBtn.addEventListener('click', async function() {
+                editorWriteSection.classList.add('hidden');
+                editorPreviewSection.classList.remove('hidden');
+                tabPreviewBtn.className = 'px-3 py-1 text-xs font-semibold rounded bg-white text-gray-800 shadow-sm border border-gray-200 transition-colors';
+                tabWriteBtn.className = 'px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-900 transition-colors';
+
+                editorPreviewOutput.innerHTML = '<div class="text-gray-400 italic">Rendering preview...</div>';
+
+                try {
+                    const response = await fetch('/wiki/api/preview', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: textInput.value })
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        editorPreviewOutput.innerHTML = data.html || '<div class="text-gray-400 italic">No content to preview.</div>';
+                    } else {
+                        editorPreviewOutput.innerHTML = '<div class="text-red-600">Failed to generate live preview.</div>';
+                    }
+                } catch (err) {
+                    console.error('Preview error:', err);
+                    editorPreviewOutput.innerHTML = '<div class="text-red-600">Error generating live preview.</div>';
+                }
+            });
+        }
+    }
 });
