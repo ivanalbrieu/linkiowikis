@@ -1,18 +1,18 @@
-<div class="flex items-center justify-between p-4 w-full bg-[#748a88] text-white">
+<div class="flex items-center justify-between p-4 w-full bg-[#748a88]">
     <!-- Left side: Logo & Wiki Title / Subnav -->
     <div class="flex items-center gap-4">
         <a href="/wiki/" class="flex-shrink-0 block">
             <img src="/img/wikilogo.png" class="w-24 md:w-28 h-auto object-contain block" alt="Wiki Logo">
         </a>
         <div>
-            <a href="/wiki/" class="no-underline text-white hover:no-underline">
-                <h1 class="text-3xl font-medium text-white m-0 leading-tight"><%= siteConfig.wikiName %></h1>
+            <a href="/wiki/" class="no-underline text-black hover:no-underline">
+                <h1 class="text-3xl font-medium text-black m-0 leading-tight"><%= siteConfig.wikiName %></h1>
             </a>
             <nav class="flex items-center gap-4 mt-1 text-sm">
-                <a class="text-white hover:text-white/80 no-underline font-normal transition-colors" href="/wiki/Main_Page">Main Page</a>
+                <a class="text-gray-800 hover:text-black hover:underline no-underline font-normal transition-colors" href="/wiki/Main_Page">Main Page</a>
                 <div class="relative dropdown">
-                    <a class="text-white hover:text-white/80 cursor-pointer dropdown-toggle no-underline font-normal inline-flex items-center gap-1 transition-colors" id="headerMoreMenu" role="button">
-                        More <i class="fa-solid fa-caret-down text-xs ml-0.5 opacity-80"></i>
+                    <a class="text-gray-800 hover:text-black cursor-pointer dropdown-toggle no-underline font-normal inline-flex items-center gap-1 transition-colors" id="headerMoreMenu" role="button">
+                        More <i class="fa-solid fa-caret-down text-[10px] ml-0.5 opacity-75"></i>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="headerMoreMenu">
                         <li><a class="dropdown-item" href="/wiki/Help">Help</a></li>
@@ -26,10 +26,10 @@
     <!-- Right side: Page Counter & Add New Page Button -->
     <div class="flex items-center gap-4">
         <div class="text-right">
-            <span class="text-2xl font-bold leading-none block text-white"><%= pagesCount %></span>
-            <span class="text-xs text-white/80">Pages</span>
+            <span class="text-2xl font-bold leading-none block text-black"><%= pagesCount %></span>
+            <span class="text-xs text-gray-800">Pages</span>
         </div>
-        <button class="btn btn-primary btn-flat text-sm px-3.5 py-1.5 flex items-center gap-2 bg-white hover:bg-gray-100 text-black border border-white/60 shadow-xs cursor-pointer font-medium" type="button" data-bs-toggle="modal" data-bs-target="#addNewPageModal">
+        <button class="btn btn-primary text-sm px-3.5 py-1.5 flex items-center gap-2 bg-white hover:bg-gray-100 text-black border border-gray-300 shadow-xs cursor-pointer font-normal rounded transition-colors" type="button" data-bs-toggle="modal" data-bs-target="#addNewPageModal">
             <i class="fa-solid fa-file-circle-plus"></i> Add new page
         </button>
     </div>

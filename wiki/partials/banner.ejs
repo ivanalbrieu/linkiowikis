@@ -1,4 +1,4 @@
-<nav class="fixed top-0 left-0 right-0 z-50 bg-[#250c21] min-h-[52px] px-4 flex items-center justify-between shadow-md text-white">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-[#250c21]/85 backdrop-blur-md min-h-[52px] px-4 flex items-center justify-between shadow-md text-white">
     <div class="flex items-center gap-6">
         <!-- Site name linking to homepage -->
         <a class="flex items-center no-underline" href="/wiki/" title="<%= siteConfig.siteName %>">
@@ -6,8 +6,8 @@
         </a>
         <!-- Main links -->
         <div class="flex items-center gap-4">
-            <a class="text-white hover:text-gray-200 text-sm no-underline font-normal transition-colors" href="/wiki/">Home</a>
-            <a class="text-white hover:text-gray-200 text-sm no-underline font-normal transition-colors" href="/wiki/about">About</a>
+            <a class="text-white/80 hover:text-white text-sm no-underline font-normal transition-colors" href="/wiki/">Home</a>
+            <a class="text-white/80 hover:text-white text-sm no-underline font-normal transition-colors" href="/wiki/about">About</a>
         </div>
     </div>
 
@@ -15,10 +15,11 @@
     <div class="flex items-center">
         <% if (isAuthenticated && currentUser) { %>
             <div class="flex items-center gap-2">
-                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border border-white object-cover block flex-shrink-0" alt="<%= currentUser.username %>">
+                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border border-white/60 object-cover block flex-shrink-0" alt="<%= currentUser.username %>">
                 <div class="relative dropdown">
-                    <a class="text-white hover:text-gray-200 text-sm cursor-pointer dropdown-toggle no-underline inline-flex items-center gap-1.5 py-1 font-normal" id="navbarDropdownMenuLink" role="button">
+                    <a class="text-white/90 hover:text-white text-sm cursor-pointer dropdown-toggle no-underline inline-flex items-center gap-1.5 py-1 font-normal transition-colors" id="navbarDropdownMenuLink" role="button">
                         <span><%= currentUser.username %></span>
+                        <i class="fa-solid fa-caret-down text-xs opacity-75"></i>
                     </a>
                     <ul class="dropdown-menu right-0" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/wiki/account">My Account</a></li>
@@ -28,8 +29,8 @@
             </div>
         <% } else { %>
             <div class="flex items-center gap-3">
-                <a class="text-white hover:text-gray-200 text-sm no-underline font-normal transition-colors" href="/wiki/login">Login</a>
-                <a class="text-white hover:text-gray-200 text-sm no-underline font-normal transition-colors" href="/wiki/register">Register</a>
+                <a class="text-white/80 hover:text-white text-sm no-underline font-normal transition-colors" href="/wiki/login">Login</a>
+                <a class="text-white/80 hover:text-white text-sm no-underline font-normal transition-colors" href="/wiki/register">Register</a>
             </div>
         <% } %>
     </div>
