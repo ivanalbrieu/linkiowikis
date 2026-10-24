@@ -61,7 +61,11 @@ echo   Press Ctrl+C to stop the server
 echo ==========================================================
 echo.
 
-:: 6. Launch Application
+:: 6. Open website in default browser
+echo [INFO] Opening http://localhost:3000/wiki/ in default browser...
+start "" "http://localhost:3000/wiki/"
+
+:: 7. Launch Application
 node app.js
 
 :: If the server crashes or exits with an error, prevent terminal from instantly closing
