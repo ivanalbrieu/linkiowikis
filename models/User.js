@@ -3,10 +3,14 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
-  // In your User model definition
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   avatar: {
     type: DataTypes.STRING,
-    allowNull: true, // This allows the column to be null if the user does not upload an avatar
+    allowNull: true,
   },
   username: {
     type: DataTypes.STRING, 
@@ -23,22 +27,30 @@ const User = sequelize.define('User', {
     allowNull: false,
   },
   signature: {
-    type: DataTypes.TEXT, // TEXT type can store longer strings than STRING
-    allowNull: true, // Allow users not to have a custom signature
-  }
-}, {
-  // Specify the table name
-  tableName: 'users',
-  // Enable timestamps
-  timestamps: true,
-  // Rename fields according to your database column names
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-  // Additional model options as needed
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
   googleId: {
     type: DataTypes.STRING,
     allowNull: true,
-},
+  },
+  is_disabled: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  disabled_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  disabled_reason: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  }
+}, {
+  tableName: 'users',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at',
 });
 
 module.exports = User;

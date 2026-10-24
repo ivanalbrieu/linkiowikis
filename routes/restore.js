@@ -7,6 +7,7 @@ const DeletedPage = require('../models/DeletedPage');
 const DeletedRevision = require('../models/DeletedRevision');
 const myCache = require('../config/cache');
 const { formatDate } = require('../utils/dateHelpers');
+const { flushDeletedRecords } = require('../services/flushService');
 
 // GET /wiki/:title/restore - View deleted page and revisions available for restoration
 router.get('/:title/restore', async (req, res) => {
@@ -145,6 +146,35 @@ router.post('/:title/restore', async (req, res) => {
         console.error('Failed to restore page:', error);
         req.flash('error_msg', 'Failed to restore page: ' + error.message);
         res.redirect(`/wiki/${encodeURIComponent(title.replace(/\s/g, '_'))}`);
+    }
+});
+
+// POST /wiki/admin/flush - Trigger manual flush of archived deletions
+router.post('/admin/flush', async (req, res) => {
+    if (!req.isAuthenticated()) {
+        return res.status(401).send('Unauthorized. You must be logged in.');
+    }
+
+    const days = req.body.days !== undefined ? parseInt(req.body.days, 10) : undefined;
+    try {
+        const result = await flushDeletedRecords({ olderThanDays: days, force: true });
+        req.flash('success_msg', `Archival flush completed: permanently purged ${result.flushedPages} page(s) and ${result.flushedRevisions} revision(s) older than ${result.olderThanDays} days.`);
+        res.redirect('/wiki/');
+    } catch (err) {
+        console.error('Failed to flush archived deletions:', err);
+        req.flash('error_msg', 'Failed to flush archival deletions: ' + err.message);
+        res.redirect('/wiki/');
+    }
+});
+
+// GET /wiki/admin/flush/status - Query dry-run status of archival records
+router.get('/admin/flush/status', async (req, res) => {
+    try {
+        const days = req.query.days ? parseInt(req.query.days, 10) : 30;
+        const dryRunResult = await flushDeletedRecords({ olderThanDays: days, dryRun: true });
+        res.json(dryRunResult);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 

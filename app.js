@@ -8,6 +8,7 @@ const app = express();
 const path = require('path');
 const NodeCache = require('node-cache');
 const pageCountMiddleware = require('./middleware/pageCountMiddleware');
+const { startFlushScheduler } = require('./services/flushService');
 
 // Site configuration
 const siteConfig = {
@@ -144,4 +145,5 @@ const port = process.env.PORT || 3000; // Use port 3000 if process.env.PORT is n
 // Start the server
 app.listen(port, () => {
   console.log(`Server started on http://localhost:${port}`);
+  startFlushScheduler();
 });

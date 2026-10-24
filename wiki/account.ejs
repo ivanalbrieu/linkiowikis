@@ -102,7 +102,21 @@
                         <small class="text-muted block mt-1">Comments on talk pages should be signed with "~~~~", which will be converted into your signature and a timestamp.</small>
                     </div>
                     <button type="submit" class="btn btn-primary btn-flat text-sm px-4 py-2">Save</button>
-                </form>                        
+                </form>
+
+                <!-- Danger Zone / Account Deactivation -->
+                <div class="mt-10 pt-6 border-t border-gray-200 max-w-2xl">
+                    <h3 class="text-base font-semibold text-red-600 mb-1">Deactivate Account</h3>
+                    <p class="text-xs text-gray-500 mb-3">Disabling your account will log you out, prevent new logins, and mark your profile as inactive. An administrator can re-enable your account if needed.</p>
+                    <form method="POST" action="/wiki/account/disable" onsubmit="return confirm('Are you sure you want to deactivate your account? You will be logged out immediately.');">
+                        <div class="mb-3">
+                            <input type="text" name="reason" class="form-control text-xs" placeholder="Optional reason for deactivation">
+                        </div>
+                        <button type="submit" class="btn btn-danger text-xs px-3 py-1.5 rounded cursor-pointer">
+                            <i class="fa-solid fa-user-slash mr-1"></i> Deactivate My Account
+                        </button>
+                    </form>
+                </div>
             </div>
             <%- include('./partials/footer') %>
         </div>

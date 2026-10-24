@@ -13,6 +13,12 @@ module.exports = function(passport) {
                     return done(null, false, { message: 'Username is not registered' });
                 }
 
+                // Check if account is disabled
+                if (user.is_disabled) {
+                    const reason = user.disabled_reason ? `: ${user.disabled_reason}` : '';
+                    return done(null, false, { message: `This account has been disabled${reason}. Please contact an administrator.` });
+                }
+
                 bcrypt.compare(password, user.password, (err, isMatch) => {
                     if (err) throw err;
                     if (isMatch) {
@@ -43,6 +49,11 @@ module.exports = function(passport) {
                     email: profile.emails && profile.emails.length > 0 ? profile.emails[0].value : null
                 }
             });
+
+            if (user && user.is_disabled) {
+                return done(null, false, { message: 'This account has been disabled.' });
+            }
+
             return done(null, user);
         } catch (err) {
             return done(err);
@@ -53,7 +64,13 @@ module.exports = function(passport) {
     passport.serializeUser((user, done) => done(null, user.id));
     passport.deserializeUser((id, done) => {
         User.findByPk(id)
-            .then(user => done(null, user))
+            .then(user => {
+                // If user was disabled while session was active, drop session
+                if (user && user.is_disabled) {
+                    return done(null, false);
+                }
+                done(null, user);
+            })
             .catch(err => done(err, null));
     });
 };

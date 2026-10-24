@@ -61,4 +61,88 @@ router.post('/account', upload.single('picture'), async (req, res) => {
   }
 });
 
+// POST /wiki/account/disable - User self-deactivation / disable account
+router.post('/account/disable', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect('/wiki/login');
+  }
+
+  const userId = req.user.id;
+  const reason = req.body.reason || 'Deactivated by user request';
+
+  try {
+    await User.update({
+      is_disabled: true,
+      disabled_at: new Date(),
+      disabled_reason: reason
+    }, {
+      where: { id: userId }
+    });
+
+    req.logout((err) => {
+      if (err) console.error('Error during logout after account disable:', err);
+      req.flash('success_msg', 'Your account has been deactivated successfully.');
+      res.redirect('/wiki/');
+    });
+  } catch (error) {
+    console.error('Error disabling account:', error);
+    req.flash('error_msg', 'Failed to deactivate account.');
+    res.redirect('/wiki/account');
+  }
+});
+
+// Admin endpoints for disabling/enabling accounts
+router.post('/admin/users/:id/disable', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const targetId = req.params.id;
+  const reason = req.body.reason || 'Disabled by administrator';
+
+  try {
+    const user = await User.findByPk(targetId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await user.update({
+      is_disabled: true,
+      disabled_at: new Date(),
+      disabled_reason: reason
+    });
+
+    res.json({ success: true, message: `Account ${user.username} has been disabled.` });
+  } catch (err) {
+    console.error('Error disabling user account:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/admin/users/:id/enable', async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const targetId = req.params.id;
+
+  try {
+    const user = await User.findByPk(targetId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    await user.update({
+      is_disabled: false,
+      disabled_at: null,
+      disabled_reason: null
+    });
+
+    res.json({ success: true, message: `Account ${user.username} has been re-enabled.` });
+  } catch (err) {
+    console.error('Error enabling user account:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
