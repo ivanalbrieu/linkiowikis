@@ -9,7 +9,7 @@
   --color-steel-dark: #5e7270;
   --color-steel-light: #a0adab;
   --color-deep-purple: #250c21;
-  --color-btn-bg: #efefef;
+  --color-btn-bg: #ffffff;
 }
 
 /* Base resets & typography */
@@ -103,15 +103,15 @@ body {
 }
 
 .btn-primary {
-  background-color: #efefef !important;
-  border-color: #748a88 !important;
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
   color: #000000 !important;
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: #dfdfdf !important;
-  border-color: #5d6f6e !important;
+  background-color: #f3f4f6 !important;
+  border-color: #9ca3af !important;
   color: #000000 !important;
 }
 
