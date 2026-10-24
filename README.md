@@ -23,15 +23,11 @@ TEST WIKI 4 (actually NeoWiki dev version Alpha 2) ROADMAP!!!
 
     Editor Module: Focus on making the editor module extensible, allowing for the easy addition of new buttons and features. Consider the integration with the content templates module for inserting predefined templates.
 
-6. Finish Google Login Logic
-
-    Authentication Module: The Google login should be part of a broader authentication module that could be extended to support other OAuth providers in the future. Ensure that this module handles user sessions securely.
-
-7. Account Disable Logic
+6. Account Disable Logic
 
     User Management Module: Implement account disable logic within a user management module that handles various user-related functionalities, including account creation, modification, and deletion.
 
-8. WYSIWYG Editor
+7. WYSIWYG Editor
 
     Rich Text Editor Module: The WYSIWYG editor should be a standalone module that can be integrated into the normal editor. It should allow for seamless switching between WYSIWYG and markdown modes.
 
