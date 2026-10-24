@@ -236,7 +236,7 @@ Solve recognizable problems instead of adding complexity.
 # PART IV — Recommended Roadmap
 
 - **Phase 1: Establish Current Baseline** (Completed: Tailwind migration, 11 templates scaled, pure Markdown engine active).
-- **Phase 2: Stabilize Core Functionality** (Page CRUD verification, cache invalidation review, redirect hardening, security audit).
+- **Phase 2: Stabilize Core Functionality** (Page CRUD, Page/Revision Restoration, Flush Service & Account Disable active).
 - **Phase 3: Everyday User Experience** (Editor enhancements, live preview, search suggestions, backlink discovery).
 - **Phase 4: Maintenance & Collaboration** (Revision rollbacks, broken-link detector, Master Admin controls).
 - **Phase 5: Distinctive Innovations** (Neowiki CSV dump pipeline, graph explorer, quality checker).
