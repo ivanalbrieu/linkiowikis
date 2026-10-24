@@ -3,34 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password | Your Site Name</title>
+    <title>Reset Password | linkiowikis</title>
+    <!-- Tailwind CSS -->
     <link href="/css/tailwind.css" rel="stylesheet">
+    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
 </head>
-<body>
-    <div class="container mt-5">
-        <h2>Reset Password</h2>
-        <% if (locals.success_msg && locals.success_msg.length > 0) { %>
-            <% locals.success_msg.forEach(function(msg) { %>
-                <div class="alert alert-success"><%= msg %></div>
-            <% }); %>
-        <% } %>        
-        <form method="POST" action="/wiki/resetrequest">
-            <% if (errors.email) { %>
+<body class="bg-black min-h-screen text-gray-900 font-sans m-0 p-0">
+    <%- include('./partials/banner') %>
+    <main class="w-full max-w-lg mx-auto pt-24 pb-12 px-4">
+        <div class="bg-white p-8 rounded shadow-md">
+            <h2 class="text-2xl font-bold mb-4 text-gray-900">Reset Password</h2>
+            <% if (locals.success_msg && locals.success_msg.length > 0) { %>
+                <% locals.success_msg.forEach(function(msg) { %>
+                    <div class="alert alert-success"><%= msg %></div>
+                <% }); %>
+            <% } %>        
+            <form method="POST" action="/wiki/resetrequest" class="space-y-4">
                 <div class="form-group">
-                    <label for="email" class="form-control-label">Email</label>
-                    <input type="email" class="form-control is-invalid" id="email" name="email" required>
-                    <div class="invalid-feedback">  
-                        <%= errors.email.msg %>
-                    </div>
+                    <label for="email" class="block font-medium mb-1 text-sm text-gray-700">Email</label>
+                    <input type="email" class="form-control <%= errors && errors.email ? 'is-invalid' : '' %>" id="email" name="email" required>
+                    <% if (errors && errors.email) { %>
+                        <div class="invalid-feedback">  
+                            <%= errors.email.msg %>
+                        </div>
+                    <% } %>
                 </div>
-            <% } else { %>
-                <div class="form-group">
-                    <label for="email" class="form-control-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-            <% } %>
-            <button type="submit" class="btn btn-outline-info">Send Reset Link</button>
-        </form>
-    </div>
-    </body>
+                <button type="submit" class="btn btn-outline-info text-sm px-4 py-2">Send Reset Link</button>
+            </form>
+        </div>
+    </main>
+    <script src="/js/scripts.js"></script>
+</body>
 </html>

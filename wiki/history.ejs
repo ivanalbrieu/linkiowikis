@@ -11,85 +11,79 @@
     <link href="/css/styles.css" rel="stylesheet">
     <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
 </head>
-<body class="d-flex h-100 bg-black">
-    <div class="container d-flex w-100 h-100 mx-auto flex-column">
-        <%- include('./partials/banner') %>
-        <main role="main" class="container">    
-            <div class="row d-flex justify-content-center mt-4">
-                <div class="col-md-10 main p-0">
-                    <%- include('./partials/addnewpage') %>
-                    <%- include('./partials/header') %>
-                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h2 class="mb-0">Revision History for <%= title.replace(/_/g, ' ') %></h2>
-                            <!-- Dropdown Menu for Page Actions -->
-                            <div class="dropdown">
-                                <button class="btn btn-primary btn-flat btn-sm dropdown-toggle" type="button" id="pageActionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-pencil"></i> Edit
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="pageActionsMenu">
-                                    <!-- Edit Page Link -->
-                                    <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/edit">Edit</a></li>
-                                    <!-- History Page Link -->
-                                    <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/history">History</a></li>
-                                    <!-- Move Page Link (Rename) -->
-                                    <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/move">Move</a></li>
-                                    <!-- Purge Page Link (Refresh Cache) -->
-                                    <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/purge">Purge</a></li>
-                                    <!-- Delete Page Link -->
-                                    <li><a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/delete" class="dropdown-item text-danger">Delete</a></li>
-                                    <!-- Back to Page -->
-                                    <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>"><i class="fas fa-arrow-left"></i> Back to Page</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div id="revisionComparisonAlertContainer"></div>
-                        <% if (revisions && revisions.length > 0) { %>
-                            <form id="revisionComparisonForm" action="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff" method="get" class="revision-comparison-form">
-                                <button type="submit" class="btn btn-primary mt-2">Compare selected revisions</button>
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Old Revision</th>
-                                            <th scope="col">New Revision</th>
-                                            <th scope="col">User</th>
-                                            <th scope="col">Date</th>
-                                            <th scope="col">Bytes</th>
-                                            <th scope="col">Justification</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% revisions.forEach((revision, index) => { %>
-                                            <tr>
-                                                <td>
-                                                    <!-- Disable "New Revision" radio button for the last revision -->
-                                                    <input type="radio" name="oldid" value="<%= revision.revisionId %>" <%= index === 0 ? 'disabled' : '' %> <%= index === revisions.length - 1 ? 'checked' : '' %> > 
-                                                </td>
-                                                <td>
-                                                    <!-- Disable "Old Revision" radio button for the first revision -->
-                                                    <input type="radio" name="newid" value="<%= revision.revisionId %>" <%= index === revisions.length - 1 ? 'disabled' : '' %> <%= index === 0 ? 'checked' : '' %> >
-                                                </td>
-                                                <td><%= revision.editedBy || 'Anonymous' %></td>
-                                                <td><a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff?oldid=<%= revision.revisionId %>"><%= formatDate(revision.editedAt) %></a></td>
-                                                <td><%= Buffer.byteLength(revision.content, 'utf8') %> bytes</td>
-                                                <td><%= revision.justification ? ` ${revision.justification}` : '' %></td>
-                                            </tr>
-                                        <% }) %>
-                                    </tbody>                                    
-                                </table>
-                                <button type="submit" class="btn btn-primary mt-2">Compare selected revisions</button>
-                            </form>
-                        <% } else { %>
-                            <p>No revisions found for this page.</p>
-                        <% } %>
+<body class="bg-black min-h-screen text-gray-900 font-sans m-0 p-0">
+    <%- include('./partials/banner') %>
+    <main class="w-full max-w-5xl mx-auto pt-20 pb-12 px-4">
+        <%- include('./partials/addnewpage') %>
+        <div class="bg-[#748a88] shadow-md">
+            <%- include('./partials/header') %>
+            <div class="bg-white min-h-[160px] p-6 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-medium text-black m-0">Revision History for <%= title.replace(/_/g, ' ') %></h2>
+                    <!-- Dropdown Menu for Page Actions -->
+                    <div class="relative dropdown">
+                        <button class="btn btn-primary btn-flat text-sm px-3 py-1 flex items-center gap-1.5 dropdown-toggle" type="button" id="pageActionsMenu">
+                            <i class="fa-solid fa-pencil"></i> Edit
+                        </button>
+                        <ul class="dropdown-menu right-0" aria-labelledby="pageActionsMenu">
+                            <!-- Edit Page Link -->
+                            <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/edit">Edit</a></li>
+                            <!-- History Page Link -->
+                            <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/history">History</a></li>
+                            <!-- Move Page Link (Rename) -->
+                            <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/move">Move</a></li>
+                            <!-- Purge Page Link (Refresh Cache) -->
+                            <li><a class="dropdown-item" href="/wiki/<%= title.replace(/\s/g, '_') %>/purge">Purge</a></li>
+                            <!-- Delete Page Link -->
+                            <li><a href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/delete" class="dropdown-item text-danger">Delete</a></li>
+                            <!-- Back to Page -->
+                            <li><a class="dropdown-item" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>"><i class="fas fa-arrow-left"></i> Back to Page</a></li>
+                        </ul>
                     </div>
-                    <%- include('./partials/footer') %>
                 </div>
+                <div id="revisionComparisonAlertContainer"></div>
+                <% if (revisions && revisions.length > 0) { %>
+                    <form id="revisionComparisonForm" action="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff" method="get" class="revision-comparison-form">
+                        <button type="submit" class="btn btn-primary btn-flat text-sm px-4 py-1.5 mb-3">Compare selected revisions</button>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Old Revision</th>
+                                    <th scope="col">New Revision</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Bytes</th>
+                                    <th scope="col">Justification</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% revisions.forEach((revision, index) => { %>
+                                    <tr>
+                                        <td>
+                                            <!-- Disable "New Revision" radio button for the last revision -->
+                                            <input type="radio" name="oldid" value="<%= revision.revisionId %>" <%= index === 0 ? 'disabled' : '' %> <%= index === revisions.length - 1 ? 'checked' : '' %> > 
+                                        </td>
+                                        <td>
+                                            <!-- Disable "Old Revision" radio button for the first revision -->
+                                            <input type="radio" name="newid" value="<%= revision.revisionId %>" <%= index === revisions.length - 1 ? 'disabled' : '' %> <%= index === 0 ? 'checked' : '' %> >
+                                        </td>
+                                        <td><%= revision.editedBy || 'Anonymous' %></td>
+                                        <td><a class="text-blue-600 hover:underline" href="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/diff?oldid=<%= revision.revisionId %>"><%= formatDate(revision.editedAt) %></a></td>
+                                        <td><%= Buffer.byteLength(revision.content, 'utf8') %> bytes</td>
+                                        <td><%= revision.justification ? ` ${revision.justification}` : '' %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>                                    
+                        </table>
+                        <button type="submit" class="btn btn-primary btn-flat text-sm px-4 py-1.5 mt-2">Compare selected revisions</button>
+                    </form>
+                <% } else { %>
+                    <p class="text-gray-700">No revisions found for this page.</p>
+                <% } %>
             </div>
-        </main>
-        <footer class="mt-auto text-white-50">
-        </footer>
-    </div>
+            <%- include('./partials/footer') %>
+        </div>
+    </main>
     <script src="/js/scripts.js"></script>
 </body>
-</html> 
+</html>

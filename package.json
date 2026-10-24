@@ -1,4 +1,11 @@
 {
+  "name": "linkiowikis",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js",
+    "build:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/tailwind.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./src/input.css -o ./public/css/tailwind.css --watch"
+  },
   "dependencies": {
     "array-flatten": "^3.0.0",
     "bcrypt": "^5.1.1",

@@ -4,36 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title.replace(/_/g, ' ') %> | Test Wiki | linkiowikis</title>
+    <title>Purge <%= title.replace(/_/g, ' ') %> | Test Wiki | linkiowikis</title>
     <!-- Tailwind CSS -->
     <link href="/css/tailwind.css" rel="stylesheet">
     <link href="/css/all.css" rel="stylesheet">
     <link href="/css/styles.css" rel="stylesheet">
     <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
 </head>
-<body class="d-flex h-100 bg-black">
-    <div class="container d-flex w-100 h-100 mx-auto flex-column">
-        <%- include('./partials/banner') %>
-        <main role="main" class="container">    
-            <div class="row d-flex justify-content-center mt-4">
-                <div class="col-md-10 main p-0">
-                    <%- include('./partials/addnewpage') %>
-                    <%- include('./partials/header') %>
-                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm">
-                        <h2 class="mb-0"><%= title.replace(/_/g, ' ') %></h2>
-                        <form action="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/purge<%= oldid ? '?oldid=' + oldid : '' %><%= newid ? '&newid=' + newid : '' %>" method="post">
-                            <p>Are you sure you want to purge the cache for this page?</p>
-                            <button type="submit" class="btn btn-primary btn-flat btn-sm">Purge Cache</button>
-                            <p>Purging a page clears the cache and forces the most current revision to appear on your browser memory.</p>
-                        </form>  
-                    </div>
-                <%- include('./partials/footer') %>
-                </div>
+<body class="bg-black min-h-screen text-gray-900 font-sans m-0 p-0">
+    <%- include('./partials/banner') %>
+    <main class="w-full max-w-5xl mx-auto pt-20 pb-12 px-4">
+        <%- include('./partials/addnewpage') %>
+        <div class="bg-[#748a88] shadow-md">
+            <%- include('./partials/header') %>
+            <div class="bg-white min-h-[160px] p-6 shadow-sm">
+                <h2 class="text-2xl font-medium text-black m-0 mb-4">Purge Cache: <%= title.replace(/_/g, ' ') %></h2>
+                <form action="/wiki/<%= encodeURIComponent(title.replace(/\s/g, '_')) %>/purge<%= oldid ? '?oldid=' + oldid : '' %><%= newid ? '&newid=' + newid : '' %>" method="post" class="space-y-4">
+                    <p class="text-gray-800">Are you sure you want to purge the cache for this page?</p>
+                    <button type="submit" class="btn btn-primary btn-flat text-sm px-4 py-2">Purge Cache</button>
+                    <p class="text-gray-500 text-sm mt-3">Purging a page clears the cache and forces the most current revision to appear on your browser memory.</p>
+                </form>  
             </div>
-        </main>
-        <footer class="mt-auto text-white-50">
-        </footer>
-    </div>
+            <%- include('./partials/footer') %>
+        </div>
+    </main>
     <script src="/js/scripts.js"></script>
 </body>
 </html>

@@ -11,105 +11,102 @@
     <link href="/css/styles.css" rel="stylesheet">
     <link rel="shortcut icon" sizes="256x256" href="/img/favicon.ico" />
 </head>
-<body class="d-flex h-100 bg-black">
-    <div class="container d-flex w-100 h-100 mx-auto flex-column">
-        <%- include('./partials/banner') %>
-        <main role="main" class="container">    
-            <div class="row d-flex justify-content-center mt-4">
-                <div class="col-md-10 main p-0">
-                    <%- include('./partials/addnewpage') %>
-                    <%- include('./partials/header') %>
-                    <div class="w-100 bg-white min-height-150 p-3 shadow-sm"> <!-- Simplified styles -->
-                        <div class="row">
-                            <!-- Adjusted profile picture to take less space on larger screens -->
-                            <div class="col-md-3 col-sm-2 text-center">
-                                <img src="<%= currentUser.avatar %>" class="rounded-circle" alt="<%= currentUser.username %>" style="width: 140px; height: 140px;">
+<body class="bg-black min-h-screen text-gray-900 font-sans m-0 p-0">
+    <%- include('./partials/banner') %>
+    <main class="w-full max-w-5xl mx-auto pt-20 pb-12 px-4">
+        <%- include('./partials/addnewpage') %>
+        <div class="bg-[#748a88] shadow-md">
+            <%- include('./partials/header') %>
+            <div class="bg-white min-h-[160px] p-6 shadow-sm">
+                <!-- User Profile Header -->
+                <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
+                    <div class="flex-shrink-0">
+                        <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-32 h-32 rounded-full border-2 border-gray-200 object-cover shadow-sm" alt="<%= currentUser.username %>">
+                    </div>
+                    <div class="flex-grow text-center sm:text-left">
+                        <h2 class="text-2xl font-bold text-gray-900 m-0 mb-1"><%= currentUser.username %></h2>
+                        <p class="text-gray-500 m-0 mb-2">Bio placeholder.</p>
+                        <% if (currentUser.roles) { %>
+                            <div class="flex flex-wrap gap-1 justify-center sm:justify-start">
+                                <% currentUser.roles.forEach(function(role) { %>
+                                    <span class="badge bg-primary"><%= role %></span>
+                                <% }); %>
                             </div>
-                            <!-- User Info and Form Column -->
-                            <div class="col-md-9 col-sm-8">
-                                <div>
-                                    <h2><%= currentUser.username %></h2>
-                                    <p>Bio placeholder.</p>
-                                    <% if(currentUser.roles) { %>
-                                        <% currentUser.roles.forEach(function(role) { %>
-                                            <span class="badge bg-primary"><%= role %></span>
-                                        <% }); %>
-                                    <% } %>
-                                </div>
-                        </div>
-                        <ul class="nav nav-tabs" id="userTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                              <a class="nav-link active" id="profile-tab" data-bs-toggle="tab" href="/wiki/user/<%= currentUser.username %>" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                              <a class="nav-link" id="messages-tab" data-bs-toggle="tab" href="/wiki/user/<%= currentUser.username %>/messages"  role="tab" aria-controls="messages" aria-selected="false">Message Wall</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                              <a class="nav-link" id="blog-tab" data-bs-toggle="tab" href="/wiki/user/<%= currentUser.username %>/blog" role="tab" aria-controls="blog" aria-selected="false">Blog</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                              <a class="nav-link" id="contributions-tab" data-bs-toggle="tab" href="/wiki/contributions/<%= currentUser.username %>/" role="tab" aria-controls="contributions" aria-selected="false">Contributions</a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="contributions-tab" data-bs-toggle="tab" href="/wiki/socialactivity/<%= currentUser.username %>/" role="tab" aria-controls="socialactivity" aria-selected="false">Activity</a>
-                            </li>
-                          </ul>
-                          <form method="POST" action="/wiki/account" enctype="multipart/form-data" class="pt-3">
-                            <div class="form-group">
-                                <label for="picture">Avatar</label>
-                                <input type="file" class="form-control-file" id="picture" name="picture">
-                                <% if(errors.picture) { %>
-                                    <% errors.picture.forEach(function(error) { %>
-                                        <div class="text-danger"><%= error %></div>
-                                    <% }); %>
-                                <% } %>
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="defaultAvatar" name="defaultAvatar">
-                                    <label class="form-check-label" for="defaultAvatar">
-                                        Revert to default avatar
-                                    </label>
-                                </div>
-                            </div>                            
-                            <div class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" class="form-control <%= errors.username ? 'is-invalid' : '' %>" id="username" name="username" value="<%= currentUser.username %>" required>
-                                <% if(errors.username) { %>
-                                    <div class="invalid-feedback">
-                                        <% errors.username.forEach(function(error) { %>
-                                            <%= error %>
-                                        <% }); %>
-                                    </div>
-                                <% } %>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control <%= errors.email ? 'is-invalid' : '' %>" id="email" name="email" value="<%= currentUser.email %>" required>
-                                <% if(errors.email) { %>
-                                    <div class="invalid-feedback">
-                                        <% errors.email.forEach(function(error) { %>
-                                            <%= error %>
-                                        <% }); %>
-                                    </div>
-                                <% } %>
-                            </div>
-                            <div class="form-group">
-                                <label for="signature">Signature</label>
-                                <input type="text" class="form-control" id="signature" name="signature" value="<%= currentUser.signature %>" />
-                                <small class="text-muted">Comments on talk pages should be signed with "~~~~", which will be converted into your signature and a timestamp.</small>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-flat btn-sm">Save</button>
-                        </form>                        
+                        <% } %>
                     </div>
                 </div>
-                    <%- include('./partials/footer') %>
-                </div>
+
+                <!-- Navigation Tabs -->
+                <ul class="nav-tabs mb-6" id="userTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="profile-tab" href="/wiki/user/<%= currentUser.username %>" role="tab">Profile</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="messages-tab" href="/wiki/user/<%= currentUser.username %>/messages" role="tab">Message Wall</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="blog-tab" href="/wiki/user/<%= currentUser.username %>/blog" role="tab">Blog</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="contributions-tab" href="/wiki/contributions/<%= currentUser.username %>/" role="tab">Contributions</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="activity-tab" href="/wiki/socialactivity/<%= currentUser.username %>/" role="tab">Activity</a>
+                    </li>
+                </ul>
+
+                <!-- Account Edit Form -->
+                <form method="POST" action="/wiki/account" enctype="multipart/form-data" class="space-y-4 max-w-2xl">
+                    <div class="form-group">
+                        <label for="picture" class="block font-medium mb-1 text-sm">Avatar</label>
+                        <input type="file" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 cursor-pointer" id="picture" name="picture">
+                        <% if (errors.picture) { %>
+                            <% errors.picture.forEach(function(error) { %>
+                                <div class="text-danger text-sm mt-1"><%= error %></div>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="defaultAvatar" name="defaultAvatar">
+                            <label class="form-check-label" for="defaultAvatar">
+                                Revert to default avatar
+                            </label>
+                        </div>
+                    </div>                            
+                    <div class="form-group">
+                        <label for="username" class="block font-medium mb-1 text-sm">Username</label>
+                        <input type="text" class="form-control <%= errors.username ? 'is-invalid' : '' %>" id="username" name="username" value="<%= currentUser.username %>" required>
+                        <% if (errors.username) { %>
+                            <div class="invalid-feedback">
+                                <% errors.username.forEach(function(error) { %>
+                                    <%= error %>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="block font-medium mb-1 text-sm">Email</label>
+                        <input type="email" class="form-control <%= errors.email ? 'is-invalid' : '' %>" id="email" name="email" value="<%= currentUser.email %>" required>
+                        <% if (errors.email) { %>
+                            <div class="invalid-feedback">
+                                <% errors.email.forEach(function(error) { %>
+                                    <%= error %>
+                                <% }); %>
+                            </div>
+                        <% } %>
+                    </div>
+                    <div class="form-group">
+                        <label for="signature" class="block font-medium mb-1 text-sm">Signature</label>
+                        <input type="text" class="form-control" id="signature" name="signature" value="<%= currentUser.signature %>" />
+                        <small class="text-muted block mt-1">Comments on talk pages should be signed with "~~~~", which will be converted into your signature and a timestamp.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-flat text-sm px-4 py-2">Save</button>
+                </form>                        
             </div>
-        </main>
-        <footer class="mt-auto text-white-50">
-        </footer>
-    </div>
+            <%- include('./partials/footer') %>
+        </div>
+    </main>
     <script src="/js/scripts.js"></script>
 </body>
-</html> 
+</html>

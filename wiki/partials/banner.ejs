@@ -2,7 +2,7 @@
     <div class="flex items-center gap-6">
         <!-- Site name linking to homepage -->
         <a class="flex items-center no-underline" href="/wiki/" title="<%= siteConfig.siteName %>">
-            <img src="/svgs/linkiowikis_logo.svg" alt="<%= siteConfig.siteName %>" class="h-7 w-auto">
+            <img src="/svgs/linkiowikis_logo.svg" alt="<%= siteConfig.siteName %>" class="h-7 w-auto block">
         </a>
         <!-- Main links -->
         <div class="flex items-center gap-4">
@@ -12,21 +12,25 @@
     </div>
 
     <!-- Right side: Authentication / User info -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center">
         <% if (isAuthenticated && currentUser) { %>
-            <div class="flex items-center gap-2 relative dropdown">
-                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border-2 border-white/40 object-cover" alt="<%= currentUser.username %>">
-                <a class="text-white/90 hover:text-white text-sm cursor-pointer dropdown-toggle no-underline flex items-center gap-1" id="navbarDropdownMenuLink" role="button">
-                    <%= currentUser.username %>
-                </a>
-                <ul class="dropdown-menu right-0" aria-labelledby="navbarDropdownMenuLink">
-                    <li><a class="dropdown-item" href="/wiki/account">My Account</a></li>
-                    <li><a class="dropdown-item text-danger" href="/wiki/logout">Logout</a></li>
-                </ul>
+            <div class="flex items-center gap-2">
+                <img src="<%= currentUser.avatar || '/img/avatars/default.jpg' %>" class="w-8 h-8 rounded-full border border-white/70 object-cover block flex-shrink-0" alt="<%= currentUser.username %>">
+                <div class="relative dropdown">
+                    <a class="text-white/90 hover:text-white text-sm cursor-pointer dropdown-toggle no-underline inline-flex items-center gap-1 py-1" id="navbarDropdownMenuLink" role="button">
+                        <span><%= currentUser.username %></span>
+                    </a>
+                    <ul class="dropdown-menu right-0" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="/wiki/account">My Account</a></li>
+                        <li><a class="dropdown-item text-danger" href="/wiki/logout">Logout</a></li>
+                    </ul>
+                </div>
             </div>
         <% } else { %>
-            <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/login">Login</a>
-            <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/register">Register</a>
+            <div class="flex items-center gap-3">
+                <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/login">Login</a>
+                <a class="text-white/80 hover:text-white text-sm no-underline transition-colors" href="/wiki/register">Register</a>
+            </div>
         <% } %>
     </div>
 </nav>
