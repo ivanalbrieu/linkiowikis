@@ -1,7 +1,8 @@
 @echo off
-setlocal enabledelayedexpansion
+setlocal
 
-title LinkioWikis Server
+title LinkioWikis Development Server
+cd /d "%~dp0"
 cls
 
 echo ==========================================================
@@ -11,24 +12,31 @@ echo.
 
 :: 1. Verify Node.js installation
 where node >nul 2>&1
-if %errorlevel% neq 0 (
+if errorlevel 1 (
     echo [ERROR] Node.js is not found in your PATH.
-    echo Please install Node.js from https://nodejs.org/ before running.
+    echo Please install Node.js from https://nodejs.org/
     echo.
     pause
     exit /b 1
 )
 
-for /f "tokens=*" %%i in ('node -v') do set NODE_VER=%%i
-for /f "tokens=*" %%i in ('npm -v') do set NPM_VER=%%i
+for /f "tokens=*" %%i in ('node -v') do set "NODE_VER=%%i"
+for /f "tokens=*" %%i in ('npm -v') do set "NPM_VER=%%i"
+
 echo [INFO] Node version: %NODE_VER%
 echo [INFO] NPM version:  %NPM_VER%
+echo.
 
 :: 2. Check for .env file
 if not exist ".env" (
     if exist ".env.example" (
-        echo [INFO] .env not found. Creating from .env.example...
+        echo [INFO] Creating .env from .env.example...
         copy ".env.example" ".env" >nul
+        if errorlevel 1 (
+            echo [ERROR] Could not create .env.
+            pause
+            exit /b 1
+        )
         echo [INFO] Created .env file.
     ) else (
         echo [WARN] No .env or .env.example file found.
@@ -37,12 +45,12 @@ if not exist ".env" (
 
 :: 3. Check dependencies
 if not exist "node_modules\" (
-    echo [INFO] node_modules not found. Running npm install...
+    echo [INFO] Dependencies not found. Running npm install...
     call npm install
-    if %errorlevel% neq 0 (
+    if errorlevel 1 (
         echo [ERROR] npm install failed.
         pause
-        exit /b %errorlevel%
+        exit /b 1
     )
 )
 
@@ -50,31 +58,27 @@ if not exist "node_modules\" (
 if not exist "public\css\tailwind.css" (
     echo [INFO] Compiled Tailwind CSS not found. Building styles...
     call npm run build:css
+    if errorlevel 1 (
+        echo [ERROR] Tailwind CSS build failed.
+        pause
+        exit /b 1
+    )
 )
 
-:: 5. MySQL / XAMPP Reminder
-echo [INFO] Database: MySQL (ensure XAMPP MySQL is running on port 3306)
+:: 5. Database reminder
+echo [INFO] Database: MySQL
+echo [INFO] Ensure your configured database is running.
 echo.
 echo ==========================================================
 echo   Starting LinkioWikis on http://localhost:3000/wiki/
-echo   Press Ctrl+C to stop the server
+echo   The browser will open when port 3000 becomes available.
+echo   Press Ctrl+C to stop the server.
 echo ==========================================================
 echo.
 
-:: 6. Open website in default browser
-echo [INFO] Opening http://localhost:3000/wiki/ in default browser...
-start "" "http://localhost:3000/wiki/"
+:: 6. Wait for the server in a separate PowerShell process.
+:: This allows Node.js to run normally in the current window.
+start "" /b powershell.exe -NoProfile -Command "$ready = $false; for ($i = 0; $i -lt 60; $i++) { $client = New-Object System.Net.Sockets.TcpClient; try { $client.Connect('127.0.0.1', 3000); $client.Close(); $ready = $true; break } catch { Start-Sleep -Milliseconds 500 } finally { $client.Dispose() } }; if ($ready) { Start-Process 'http://localhost:3000/wiki/' } else { Write-Host '[WARN] Server did not become available within 30 seconds.' }"
 
-:: 7. Launch Application
+:: 7. Launch application
 node app.js
-
-:: If the server crashes or exits with an error, prevent terminal from instantly closing
-if %errorlevel% neq 0 (
-    echo.
-    echo ==========================================================
-    echo [ERROR] Server terminated unexpectedly with exit code %errorlevel%.
-    echo Check the error logs above for details.
-    echo ==========================================================
-    echo.
-    pause
-)
